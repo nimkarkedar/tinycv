@@ -487,7 +487,7 @@
         <!-- Header -->
         <div class="header">
             <h1>Resume Optimizer</h1>
-            <p>Upload your resume and job posting to get a mobile-optimized CV and cover letter</p>
+            <p>Upload your resume and optionally add job posting details to get a mobile-optimized CV and cover letter</p>
         </div>
 
         <!-- Upload Section -->
@@ -510,8 +510,9 @@
 
             <!-- Job URL Input -->
             <div class="form-group">
-                <label for="jobUrl" class="form-label">Job Posting URL</label>
+                <label for="jobUrl" class="form-label">Job Posting URL (Optional)</label>
                 <input type="url" id="jobUrl" class="form-input" placeholder="https://company.com/job-posting">
+                <p class="form-help">Leave empty to generate only an optimized resume without cover letter</p>
             </div>
 
             <!-- OpenAI API Key -->
@@ -871,10 +872,6 @@
                 return;
             }
             
-            if (!jobUrl.value) {
-                showError('Please enter a job posting URL');
-                return;
-            }
             
             if (!apiKey.value) {
                 showError('Please enter your OpenAI API key');
@@ -888,23 +885,30 @@
             setLoading(true);
             resultsSection.classList.remove('hidden');
 
+            const hasJobPosting = jobUrl.value.trim() !== '';
+
             try {
                 // Step 1: Extract resume text (already done)
                 updateStep(1, 'complete');
 
-                // Step 2: Get job posting content
+                // Step 2: Get job posting content (if URL provided)
                 updateStep(2, 'loading');
-                jobPostingText = await fetchJobPosting(jobUrl.value);
+                updateStepText(2, hasJobPosting ? 'Analyzing job requirements...' : 'Skipping job analysis (no URL provided)...');
+                if (hasJobPosting) {
+                    jobPostingText = await fetchJobPosting(jobUrl.value);
+                } else {
+                    jobPostingText = '';
+                }
                 updateStep(2, 'complete');
 
                 // Step 3: Optimize with AI
                 updateStep(3, 'loading');
-                optimizedContent = await optimizeWithAI(resumeText, jobPostingText, apiKey.value);
+                optimizedContent = await optimizeWithAI(resumeText, jobPostingText, apiKey.value, hasJobPosting);
                 updateStep(3, 'complete');
 
                 // Step 4: Generate templates
                 updateStep(4, 'loading');
-                generatePreviews(optimizedContent);
+                generatePreviews(optimizedContent, hasJobPosting);
                 updateStep(4, 'complete');
 
             } catch (error) {
@@ -938,24 +942,15 @@
             return jobText;
         }
 
-        async function optimizeWithAI(resume, jobPosting, apiKey) {
+        async function optimizeWithAI(resume, jobPosting, apiKey, hasJobPosting) {
             console.log('Starting OpenAI optimization...');
             
             try {
-                const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}`
-                    },
-                    body: JSON.stringify({
-                        model: 'gpt-4o-mini',
-                        messages: [{
-                            role: 'system',
-                            content: 'You are a professional resume writer. You MUST respond with valid JSON only. Do not include any markdown formatting, explanations, or text outside the JSON object.'
-                        }, {
-                            role: 'user',
-                            content: `Create an optimized mobile-friendly resume and cover letter based on this resume and job posting.
+                let userContent;
+                let jsonStructure;
+                
+                if (hasJobPosting) {
+                    userContent = `Create an optimized mobile-friendly resume and cover letter based on this resume and job posting.
 
 RESUME:
 ${resume}
@@ -963,8 +958,9 @@ ${resume}
 JOB POSTING:
 ${jobPosting}
 
-Respond with ONLY this exact JSON structure (no additional text, no markdown, no explanations):
-{
+Focus on mobile-friendly format, job posting keywords, and quantified achievements.`;
+                    
+                    jsonStructure = `{
   "optimizedResume": {
     "name": "Full Name",
     "contact": "email@example.com | phone | LinkedIn",
@@ -989,9 +985,57 @@ Respond with ONLY this exact JSON structure (no additional text, no markdown, no
   "coverLetter": {
     "content": "Full cover letter text optimized for this specific job"
   }
-}
+}`;
+                } else {
+                    userContent = `Create an optimized mobile-friendly resume based on this resume text.
 
-Focus on mobile-friendly format, job posting keywords, and quantified achievements.`
+RESUME:
+${resume}
+
+Focus on mobile-friendly format, improved structure, and quantified achievements.`;
+                    
+                    jsonStructure = `{
+  "optimizedResume": {
+    "name": "Full Name",
+    "contact": "email@example.com | phone | LinkedIn",
+    "summary": "Brief professional summary",
+    "skills": ["skill1", "skill2", "skill3"],
+    "experience": [
+      {
+        "title": "Job Title",
+        "company": "Company Name",
+        "period": "2020-2023",
+        "achievements": ["Achievement 1", "Achievement 2"]
+      }
+    ],
+    "education": [
+      {
+        "degree": "Degree",
+        "school": "School Name",
+        "year": "2020"
+      }
+    ]
+  }
+}`;
+                }
+                
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4o-mini',
+                        messages: [{
+                            role: 'system',
+                            content: 'You are a professional resume writer. You MUST respond with valid JSON only. Do not include any markdown formatting, explanations, or text outside the JSON object.'
+                        }, {
+                            role: 'user',
+                            content: `${userContent}
+
+Respond with ONLY this exact JSON structure (no additional text, no markdown, no explanations):
+${jsonStructure}`
                         }],
                         max_tokens: 3000,
                         temperature: 0.3
@@ -1013,7 +1057,7 @@ Focus on mobile-friendly format, job posting keywords, and quantified achievemen
                 
                 console.log('Raw OpenAI response preview:', content.substring(0, 200) + '...');
                 
-                return parseOpenAIResponse(content);
+                return parseOpenAIResponse(content, hasJobPosting);
                 
             } catch (error) {
                 console.error('OpenAI optimization error:', error);
@@ -1021,7 +1065,7 @@ Focus on mobile-friendly format, job posting keywords, and quantified achievemen
             }
         }
         
-        function parseOpenAIResponse(content) {
+        function parseOpenAIResponse(content, hasJobPosting) {
             console.log('Parsing OpenAI JSON response...');
             
             try {
@@ -1048,7 +1092,7 @@ Focus on mobile-friendly format, job posting keywords, and quantified achievemen
                 console.log('JSON parsed successfully');
                 
                 // Validate the structure
-                if (!validateResponseStructure(parsed)) {
+                if (!validateResponseStructure(parsed, hasJobPosting)) {
                     throw new Error('Invalid response structure from OpenAI');
                 }
                 
@@ -1059,18 +1103,24 @@ Focus on mobile-friendly format, job posting keywords, and quantified achievemen
                 console.error('Content that failed to parse:', content);
                 
                 // Try to create a fallback response
-                return createFallbackResponse(error.message);
+                return createFallbackResponse(error.message, hasJobPosting);
             }
         }
         
-        function validateResponseStructure(data) {
+        function validateResponseStructure(data, hasJobPosting) {
             if (!data || typeof data !== 'object') {
                 console.error('Response is not an object');
                 return false;
             }
             
-            if (!data.optimizedResume || !data.coverLetter) {
-                console.error('Missing required fields: optimizedResume or coverLetter');
+            if (!data.optimizedResume) {
+                console.error('Missing required field: optimizedResume');
+                return false;
+            }
+            
+            // Only require coverLetter if job posting was provided
+            if (hasJobPosting && !data.coverLetter) {
+                console.error('Missing required field: coverLetter (job posting provided)');
                 return false;
             }
             
@@ -1080,7 +1130,8 @@ Focus on mobile-friendly format, job posting keywords, and quantified achievemen
                 return false;
             }
             
-            if (!data.coverLetter.content) {
+            // Only validate cover letter content if job posting was provided
+            if (hasJobPosting && data.coverLetter && !data.coverLetter.content) {
                 console.error('Missing cover letter content');
                 return false;
             }
@@ -1089,10 +1140,10 @@ Focus on mobile-friendly format, job posting keywords, and quantified achievemen
             return true;
         }
         
-        function createFallbackResponse(errorMsg) {
+        function createFallbackResponse(errorMsg, hasJobPosting) {
             console.warn('Creating fallback response due to JSON parsing failure');
             
-            return {
+            const response = {
                 optimizedResume: {
                     name: "Resume Processing Error",
                     contact: "Please try manual input",
@@ -1109,25 +1160,42 @@ Focus on mobile-friendly format, job posting keywords, and quantified achievemen
                         school: "AI Response Failed",
                         year: "N/A"
                     }]
-                },
-                coverLetter: {
-                    content: `AI processing encountered an error: ${errorMsg}. Please try again or use the manual input option to enter your resume information. Check that your OpenAI API key is valid and has sufficient credits.`
                 }
             };
+            
+            // Only add cover letter if job posting was provided
+            if (hasJobPosting) {
+                response.coverLetter = {
+                    content: `AI processing encountered an error: ${errorMsg}. Please try again or use the manual input option to enter your resume information. Check that your OpenAI API key is valid and has sufficient credits.`
+                };
+            }
+            
+            return response;
         }
 
-        function generatePreviews(content) {
+        function generatePreviews(content, hasJobPosting) {
             // Generate resume HTML
             const resumeHtml = createResumeTemplate(content.optimizedResume);
             document.getElementById('resumePreview').innerHTML = resumeHtml;
 
-            // Generate cover letter HTML
-            const coverLetterHtml = createCoverLetterTemplate(content.coverLetter);
-            document.getElementById('coverLetterPreview').innerHTML = coverLetterHtml;
-
-            // Enable download buttons
+            // Enable resume download button
             document.getElementById('downloadResume').disabled = false;
-            document.getElementById('downloadCoverLetter').disabled = false;
+
+            // Handle cover letter section based on job posting availability
+            const coverLetterCard = document.querySelector('.card:has(#coverLetterPreview)');
+            const downloadCoverLetterBtn = document.getElementById('downloadCoverLetter');
+            
+            if (hasJobPosting && content.coverLetter) {
+                // Generate cover letter HTML and show section
+                const coverLetterHtml = createCoverLetterTemplate(content.coverLetter);
+                document.getElementById('coverLetterPreview').innerHTML = coverLetterHtml;
+                downloadCoverLetterBtn.disabled = false;
+                if (coverLetterCard) coverLetterCard.style.display = 'block';
+            } else {
+                // Hide cover letter section
+                if (coverLetterCard) coverLetterCard.style.display = 'none';
+                downloadCoverLetterBtn.disabled = true;
+            }
         }
 
         function createResumeTemplate(resume) {
@@ -1209,22 +1277,73 @@ Focus on mobile-friendly format, job posting keywords, and quantified achievemen
 
         async function downloadAsPDF(elementId, filename) {
             const element = document.getElementById(elementId);
-            const canvas = await html2canvas(element, {
-                scale: 2,
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: '#ffffff'
-            });
+            
+            // Store original styles
+            const originalHeight = element.style.height;
+            const originalMaxHeight = element.style.maxHeight;
+            const originalOverflow = element.style.overflow;
+            const originalOverflowY = element.style.overflowY;
+            
+            try {
+                // Temporarily remove height constraints and scrolling to capture full content
+                element.style.height = 'auto';
+                element.style.maxHeight = 'none';
+                element.style.overflow = 'visible';
+                element.style.overflowY = 'visible';
+                
+                // Force a reflow to ensure styles are applied
+                element.offsetHeight;
+                
+                // Capture the full content
+                const canvas = await html2canvas(element, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                    scrollX: 0,
+                    scrollY: 0,
+                    windowWidth: element.scrollWidth,
+                    windowHeight: element.scrollHeight,
+                    width: element.scrollWidth,
+                    height: element.scrollHeight
+                });
 
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            
-            const imgData = canvas.toDataURL('image/png');
-            const imgWidth = 210; // A4 width in mm
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            
-            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-            pdf.save(filename);
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 210; // A4 width in mm
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                
+                // If content is very tall, we might need multiple pages
+                const pageHeight = 297; // A4 height in mm
+                let yPosition = 0;
+                
+                // Add first page
+                pdf.addImage(imgData, 'PNG', 0, yPosition, imgWidth, imgHeight);
+                
+                // Add additional pages if content exceeds one page
+                if (imgHeight > pageHeight) {
+                    let remainingHeight = imgHeight - pageHeight;
+                    yPosition = -pageHeight;
+                    
+                    while (remainingHeight > 0) {
+                        pdf.addPage();
+                        pdf.addImage(imgData, 'PNG', 0, yPosition, imgWidth, imgHeight);
+                        yPosition -= pageHeight;
+                        remainingHeight -= pageHeight;
+                    }
+                }
+                
+                pdf.save(filename);
+                
+            } finally {
+                // Restore original styles
+                element.style.height = originalHeight;
+                element.style.maxHeight = originalMaxHeight;
+                element.style.overflow = originalOverflow;
+                element.style.overflowY = originalOverflowY;
+            }
         }
 
         // Utility functions
@@ -1242,6 +1361,14 @@ Focus on mobile-friendly format, job posting keywords, and quantified achievemen
         function updateStep(stepNum, status) {
             const step = document.getElementById(`step${stepNum}`);
             step.className = 'step-indicator ' + status;
+        }
+
+        function updateStepText(stepNum, text) {
+            const stepElement = document.getElementById(`step${stepNum}`).parentElement;
+            const textElement = stepElement.querySelector('.step-text');
+            if (textElement) {
+                textElement.textContent = text;
+            }
         }
 
         function getCurrentStep() {
