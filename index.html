@@ -301,6 +301,228 @@
             font-size: 14px;
         }
 
+        /* PDF-optimized resume styles */
+        .pdf-resume {
+            width: 380px; /* Mobile-optimized width */
+            margin: 0 auto; /* Center alignment */
+            padding: 24px; /* Proper mobile margins */
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.5;
+            color: #000000;
+            font-size: 11pt;
+            background: #ffffff;
+            box-sizing: border-box;
+        }
+
+        .pdf-resume h1 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #000000;
+            margin-bottom: 12px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .pdf-resume h2 {
+            font-size: 16px;
+            font-weight: bold;
+            color: #000000;
+            margin: 24px 0 16px 0;
+            border-bottom: 1px solid #000000;
+            padding-bottom: 6px;
+            text-transform: uppercase;
+            line-height: 1.3;
+        }
+
+        .pdf-resume h3 {
+            font-weight: bold;
+            color: #000000;
+            margin-bottom: 6px;
+            font-size: 14px;
+            line-height: 1.3;
+        }
+
+        .pdf-resume .contact {
+            font-size: 12px;
+            color: #000000;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .pdf-resume .summary {
+            font-size: 12px;
+            color: #000000;
+            margin-bottom: 20px;
+            text-align: justify;
+            line-height: 1.5;
+        }
+
+        .pdf-resume .skills {
+            margin-bottom: 20px;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .pdf-resume .skill-tag {
+            display: inline;
+            font-size: 12px;
+            color: #000000;
+            margin-right: 8px;
+        }
+
+        .pdf-resume .skill-tag:after {
+            content: " • ";
+        }
+
+        .pdf-resume .skill-tag:last-child:after {
+            content: "";
+        }
+
+        .pdf-resume .experience-item {
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            page-break-inside: avoid;
+            border-bottom: 0.5px solid #cccccc;
+        }
+
+        .pdf-resume .experience-item:last-child {
+            border-bottom: none;
+            margin-bottom: 24px;
+        }
+
+        .pdf-resume .job-header {
+            margin-bottom: 8px;
+            page-break-after: avoid;
+            line-height: 1.3;
+        }
+
+        .pdf-resume .job-title {
+            font-weight: bold;
+            color: #000000;
+            font-size: 14px;
+            line-height: 1.3;
+        }
+
+        .pdf-resume .company {
+            font-size: 12px;
+            color: #000000;
+            font-style: italic;
+            line-height: 1.3;
+        }
+
+        .pdf-resume .period {
+            font-size: 12px;
+            color: #000000;
+            float: right;
+            line-height: 1.3;
+        }
+
+        .pdf-resume .achievements {
+            list-style: none;
+            padding: 0;
+            margin: 8px 0 0 0;
+            page-break-inside: avoid;
+        }
+
+        .pdf-resume .achievements li {
+            font-size: 12px;
+            color: #000000;
+            margin-bottom: 4px;
+            padding-left: 16px;
+            position: relative;
+            line-height: 1.4;
+        }
+
+        .pdf-resume .achievements li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #000000;
+        }
+
+        .pdf-resume .education-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            page-break-inside: avoid;
+            line-height: 1.3;
+        }
+
+        .pdf-resume .education-item > div:first-child {
+            flex: 1;
+            margin-right: 16px;
+        }
+
+        .pdf-resume .degree {
+            font-weight: bold;
+            color: #000000;
+            font-size: 14px;
+            line-height: 1.3;
+            margin-bottom: 2px;
+        }
+
+        .pdf-resume .school {
+            font-size: 12px;
+            color: #000000;
+            font-style: italic;
+            line-height: 1.3;
+        }
+
+        .pdf-resume .year {
+            font-size: 12px;
+            color: #000000;
+            line-height: 1.3;
+            flex-shrink: 0;
+            text-align: right;
+        }
+
+        /* Section wrapper for page break control */
+        .pdf-resume .section-wrapper {
+            display: block;
+            page-break-inside: avoid;
+            break-inside: avoid;
+            /* Fallback for older browsers */
+            -webkit-column-break-inside: avoid;
+            margin-bottom: 24px;
+            min-height: 60px; /* Minimum height to avoid orphaned headers */
+            /* Ensure headers stay with content */
+            orphans: 3;
+            widows: 3;
+        }
+
+        .pdf-resume .section-wrapper:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Additional page break controls */
+        .pdf-resume h2 {
+            page-break-after: avoid;
+            break-after: avoid;
+            -webkit-column-break-after: avoid;
+        }
+
+        /* PDF-optimized cover letter styles */
+        .pdf-cover-letter {
+            width: 380px; /* Mobile-optimized width */
+            margin: 0 auto; /* Center alignment */
+            padding: 24px; /* Proper mobile margins */
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.6;
+            color: #000000;
+            font-size: 11pt;
+            background: #ffffff;
+            box-sizing: border-box;
+        }
+
+        .pdf-cover-letter p {
+            margin-bottom: 12pt;
+            text-align: justify;
+            font-size: 12pt;
+            color: #000000;
+        }
+
         .mobile-resume h1 {
             font-size: 1.25rem;
             font-weight: bold;
@@ -406,7 +628,7 @@
         .mobile-resume .education-item {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 0.5rem;
         }
 
@@ -1201,26 +1423,30 @@ ${jsonStructure}`
         function createResumeTemplate(resume) {
             return `
                 <div class="mobile-resume">
+                    <!-- Header Section - Always at top -->
                     <div style="text-align: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb;">
                         <h1>${resume.name}</h1>
                         <p class="contact">${resume.contact}</p>
                     </div>
 
                     ${resume.summary ? `
-                    <div style="margin-bottom: 1rem;">
+                    <!-- Professional Summary Section -->
+                    <div class="section-wrapper" style="margin-bottom: 1rem;">
                         <h2>Professional Summary</h2>
                         <p class="summary">${resume.summary}</p>
                     </div>
                     ` : ''}
 
-                    <div style="margin-bottom: 1rem;">
+                    <!-- Skills Section -->
+                    <div class="section-wrapper" style="margin-bottom: 1rem;">
                         <h2>Key Skills</h2>
                         <div class="skills">
                             ${resume.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
                         </div>
                     </div>
 
-                    <div style="margin-bottom: 1rem;">
+                    <!-- Experience Section -->
+                    <div class="section-wrapper" style="margin-bottom: 1rem;">
                         <h2>Experience</h2>
                         ${resume.experience.map(exp => `
                             <div class="experience-item">
@@ -1239,7 +1465,8 @@ ${jsonStructure}`
                     </div>
 
                     ${resume.education && resume.education.length > 0 ? `
-                    <div>
+                    <!-- Education Section -->
+                    <div class="section-wrapper">
                         <h2>Education</h2>
                         ${resume.education.map(edu => `
                             <div class="education-item">
@@ -1276,36 +1503,111 @@ ${jsonStructure}`
         });
 
         async function downloadAsPDF(elementId, filename) {
-            const element = document.getElementById(elementId);
+            const originalElement = document.getElementById(elementId);
             
-            // Store original styles
-            const originalHeight = element.style.height;
-            const originalMaxHeight = element.style.maxHeight;
-            const originalOverflow = element.style.overflow;
-            const originalOverflowY = element.style.overflowY;
+            // Create a temporary container for PDF generation
+            const pdfContainer = document.createElement('div');
+            pdfContainer.style.position = 'absolute';
+            pdfContainer.style.left = '-9999px';
+            pdfContainer.style.top = '0';
+            pdfContainer.style.width = '428px'; /* 380px content + 48px padding (24px each side) */
+            pdfContainer.style.backgroundColor = '#ffffff';
+            pdfContainer.style.border = 'none';
+            pdfContainer.style.padding = '0';
+            pdfContainer.style.margin = '0';
+            pdfContainer.style.boxShadow = 'none';
+            pdfContainer.style.display = 'flex';
+            pdfContainer.style.justifyContent = 'center';
+            
+            // Clone the content and apply PDF styling
+            const mobileContent = originalElement.querySelector('.mobile-resume');
+            if (!mobileContent) {
+                throw new Error('Content not found for PDF generation');
+            }
+            
+            const contentClone = mobileContent.cloneNode(true);
+            
+            // Determine if this is a resume or cover letter
+            const isResume = elementId === 'resumePreview';
+            contentClone.className = isResume ? 'pdf-resume' : 'pdf-cover-letter';
+            
+            // Apply resume-specific formatting
+            if (isResume) {
+                // Fix job header layout for PDF
+                const jobHeaders = contentClone.querySelectorAll('.job-header');
+                jobHeaders.forEach(header => {
+                    header.style.display = 'block';
+                    header.style.marginBottom = '4pt';
+                    
+                    // Create proper layout for job title/company and period
+                    const titleCompany = header.querySelector('.job-title').parentElement;
+                    const period = header.querySelector('.period');
+                    if (titleCompany && period) {
+                        titleCompany.style.display = 'inline-block';
+                        titleCompany.style.width = '70%';
+                        period.style.display = 'inline-block';
+                        period.style.width = '30%';
+                        period.style.textAlign = 'right';
+                        period.style.float = 'none';
+                    }
+                });
+                
+                // Education items now use CSS flexbox - no manual layout needed
+                
+                // Convert skill tags for PDF format
+                const skillsContainer = contentClone.querySelector('.skills');
+                if (skillsContainer) {
+                    const skills = skillsContainer.querySelectorAll('.skill-tag');
+                    let skillText = '';
+                    skills.forEach((skill, index) => {
+                        skillText += skill.textContent;
+                        if (index < skills.length - 1) {
+                            skillText += ' • ';
+                        }
+                    });
+                    skillsContainer.innerHTML = skillText;
+                    skillsContainer.className = 'skills';
+                    skillsContainer.style.fontSize = '12px';
+                    skillsContainer.style.marginBottom = '20px';
+                }
+
+                // Enhance section wrappers for better page break control
+                const sectionWrappers = contentClone.querySelectorAll('.section-wrapper');
+                sectionWrappers.forEach((wrapper, index) => {
+                    // Ensure proper display and page break properties
+                    wrapper.style.display = 'block';
+                    wrapper.style.pageBreakInside = 'avoid';
+                    wrapper.style.breakInside = 'avoid';
+                    wrapper.style.webkitColumnBreakInside = 'avoid';
+                    
+                    // Add minimum height to avoid orphaned headers
+                    const header = wrapper.querySelector('h2');
+                    if (header) {
+                        const contentHeight = wrapper.scrollHeight - header.offsetHeight;
+                        if (contentHeight < 40) { // If content is very small
+                            wrapper.style.minHeight = '80px';
+                        }
+                    }
+                });
+            }
+            
+            pdfContainer.appendChild(contentClone);
+            document.body.appendChild(pdfContainer);
             
             try {
-                // Temporarily remove height constraints and scrolling to capture full content
-                element.style.height = 'auto';
-                element.style.maxHeight = 'none';
-                element.style.overflow = 'visible';
-                element.style.overflowY = 'visible';
-                
                 // Force a reflow to ensure styles are applied
-                element.offsetHeight;
+                pdfContainer.offsetHeight;
                 
-                // Capture the full content
-                const canvas = await html2canvas(element, {
-                    scale: 2,
+                // Capture the PDF-optimized content
+                const canvas = await html2canvas(pdfContainer, {
+                    scale: 3, // Higher scale for better quality
                     useCORS: true,
                     allowTaint: true,
                     backgroundColor: '#ffffff',
                     scrollX: 0,
                     scrollY: 0,
-                    windowWidth: element.scrollWidth,
-                    windowHeight: element.scrollHeight,
-                    width: element.scrollWidth,
-                    height: element.scrollHeight
+                    width: pdfContainer.scrollWidth,
+                    height: pdfContainer.scrollHeight
                 });
 
                 const { jsPDF } = window.jspdf;
@@ -1338,11 +1640,8 @@ ${jsonStructure}`
                 pdf.save(filename);
                 
             } finally {
-                // Restore original styles
-                element.style.height = originalHeight;
-                element.style.maxHeight = originalMaxHeight;
-                element.style.overflow = originalOverflow;
-                element.style.overflowY = originalOverflowY;
+                // Remove the temporary container
+                document.body.removeChild(pdfContainer);
             }
         }
 
