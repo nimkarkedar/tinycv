@@ -45,85 +45,81 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--background-soft);
+            background-color: var(--background);
             color: var(--text-primary);
             line-height: 1.6;
             min-height: 100vh;
+            margin: 0;
             transition: all 0.2s ease;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Header */
-        .header {
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #4f46e5 0%, #059669 100%);
+            color: white;
             text-align: center;
-            margin-bottom: 3rem;
+            padding: 4rem 2rem;
+            position: relative;
         }
 
-        .header h1 {
+        .hero-section h1 {
             font-family: 'American Typewriter', 'Courier New', monospace;
-            font-size: 3rem;
+            font-size: 4rem;
             font-weight: 400;
-            color: var(--text-primary);
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--primary-blue), var(--accent-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: white;
         }
 
-        .header p {
-            color: var(--text-secondary);
-            font-size: 1.2rem;
+        .hero-section .tagline {
+            font-size: 1.5rem;
             font-weight: 300;
+            opacity: 0.95;
             max-width: 600px;
             margin: 0 auto;
         }
 
-        /* Tab Navigation */
-        .tab-container {
-            margin-bottom: 4rem;
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            width: 100%;
         }
 
+        /* Tab Navigation */
         .tab-navigation {
             display: flex;
-            background: var(--background);
-            border-radius: var(--border-radius);
-            padding: 0.5rem;
-            box-shadow: var(--shadow-sm);
+            gap: 1rem;
             margin-bottom: 3rem;
-            border: 1px solid var(--border-light);
         }
 
         .tab-button {
-            flex: 1;
             padding: 1rem 2rem;
             border: none;
-            background: transparent;
-            font-size: 1.1rem;
+            background: var(--background-soft);
+            font-size: 1rem;
             font-weight: 500;
             color: var(--text-secondary);
             cursor: pointer;
-            border-radius: var(--border-radius-sm);
+            border-radius: 50px;
             transition: all 0.3s ease;
-            position: relative;
+            border: 2px solid transparent;
         }
 
         .tab-button:hover {
             color: var(--text-primary);
-            background-color: var(--background-soft);
-            transform: translateY(-1px);
         }
 
         .tab-button.active {
-            color: var(--background);
-            background: linear-gradient(135deg, var(--primary-blue), var(--accent-cyan));
-            box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
+            background: var(--text-primary);
+            color: white;
         }
 
         .tab-content {
@@ -134,123 +130,119 @@
             display: block;
         }
 
-        /* Cards */
-        .card {
+        /* Form Container */
+        .form-container {
             background: var(--background);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-md);
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-            border: 1px solid var(--border-light);
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .card:hover {
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-4px);
-            border-color: var(--border-medium);
-        }
-
-        .card h2 {
-            font-size: 1.75rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            color: var(--text-primary);
-            background: linear-gradient(135deg, var(--primary-blue), var(--accent-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            border-radius: 0;
+            padding: 0;
+            border: none;
         }
 
         /* Form elements */
         .form-group {
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
         .form-label {
             display: block;
             font-weight: 500;
             color: var(--text-primary);
-            margin-bottom: 0.75rem;
-            font-size: 1rem;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .form-label .required {
+            color: #ef4444;
         }
 
         .form-input {
             width: 100%;
-            padding: 1rem;
+            padding: 1.25rem;
             border: 2px solid var(--border-light);
-            border-radius: var(--border-radius-sm);
+            border-radius: 50px;
             font-size: 1rem;
             transition: all 0.3s ease;
-            background-color: var(--background);
+            background-color: #f8fafc;
             color: var(--text-primary);
         }
 
         .form-input:focus {
             outline: none;
             border-color: var(--primary-blue);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-            transform: translateY(-1px);
+            background-color: var(--background);
         }
 
         .form-input:hover {
-            border-color: var(--border-medium);
+            background-color: var(--background);
         }
 
         .form-help {
-            font-size: 0.875rem;
+            font-size: 0.9rem;
             color: var(--text-secondary);
             margin-top: 0.5rem;
+            font-style: italic;
         }
 
-        /* Drop zone */
-        .drop-zone {
-            border: 3px dashed var(--border-medium);
-            border-radius: var(--border-radius);
-            padding: 3rem 1rem;
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed var(--border-medium);
+            border-radius: 20px;
+            padding: 3rem 2rem;
             text-align: center;
+            background: #f8fafc;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: var(--background-soft);
+            position: relative;
         }
 
-        .drop-zone:hover, .drop-zone.drag-over {
+        .upload-area:hover, .upload-area.drag-over {
             border-color: var(--primary-blue);
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(93, 227, 255, 0.05));
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-sm);
+            background: rgba(59, 130, 246, 0.05);
         }
 
-        .drop-zone svg {
+        .upload-area svg {
             width: 48px;
             height: 48px;
-            margin: 0 auto 1rem;
-            color: #9ca3af;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
         }
 
-        .drop-zone p {
-            color: #6b7280;
-            margin: 0.5rem 0;
+        .upload-area .upload-text {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin: 0;
         }
 
-        .drop-zone .main-text {
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
-
-        .drop-zone .sub-text {
+        .upload-area .upload-subtext {
+            color: var(--text-muted);
             font-size: 0.9rem;
+            margin-top: 0.5rem;
         }
 
         /* File info */
         .file-info {
-            background: #f3f4f6;
-            padding: 0.75rem;
-            border-radius: 6px;
-            margin-top: 0.5rem;
+            background: var(--background-soft);
+            border: 1px solid var(--border-light);
+            padding: 0.75rem 1rem;
+            border-radius: var(--border-radius-sm);
+            margin-top: 0.75rem;
             font-size: 0.875rem;
-            color: #4b5563;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .file-info.success {
+            background: #ecfdf5;
+            border-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .file-info.error {
+            background: #fef2f2;
+            border-color: #fecaca;
+            color: #991b1b;
         }
 
         /* Buttons */
@@ -271,19 +263,21 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary-blue), var(--accent-cyan));
+            background: linear-gradient(135deg, #4f46e5, #059669);
             color: white;
             width: 100%;
             justify-content: center;
-            box-shadow: var(--shadow-md);
-            font-size: 1.1rem;
-            padding: 1.25rem 2rem;
+            box-shadow: var(--shadow-lg);
+            font-size: 1.2rem;
+            font-weight: 600;
+            padding: 1.5rem 2rem;
+            border-radius: 50px;
         }
 
         .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: var(--shadow-lg);
-            background: linear-gradient(135deg, var(--primary-hover), var(--primary-blue));
+            background: linear-gradient(135deg, #4338ca, #047857);
         }
 
         .btn-primary:active {
@@ -315,6 +309,16 @@
             background: var(--text-muted);
             cursor: not-allowed;
             transform: none;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-light);
+            margin-top: auto;
         }
 
         /* Loading spinner */
@@ -623,6 +627,161 @@
             -webkit-column-break-after: avoid;
         }
 
+        /* Ultra-Condensed Resume - Single Page 1200px max height */
+        .ultra-condensed-resume {
+            width: 380px;
+            max-height: 1200px;
+            margin: 0 auto;
+            padding: 16px;
+            font-family: 'Arial', sans-serif;
+            font-size: 9px;
+            line-height: 1.2;
+            color: #000000;
+            background: white;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        /* Header - Compact single line */
+        .ultra-condensed-resume .header {
+            text-align: center;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #000;
+        }
+
+        .ultra-condensed-resume h1 {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0 0 2px 0;
+            line-height: 1.1;
+        }
+
+        .ultra-condensed-resume .contact {
+            font-size: 8px;
+            margin: 0;
+            line-height: 1.1;
+        }
+
+        /* Two-column layout for maximum space efficiency */
+        .ultra-condensed-resume .content {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .ultra-condensed-resume .main-column {
+            flex: 2;
+        }
+
+        .ultra-condensed-resume .sidebar {
+            flex: 1;
+        }
+
+        /* Section headers - minimal spacing */
+        .ultra-condensed-resume h2 {
+            font-size: 11px;
+            font-weight: bold;
+            margin: 8px 0 4px 0;
+            padding-bottom: 2px;
+            border-bottom: 0.5px solid #000;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Summary - very compact */
+        .ultra-condensed-resume .summary {
+            font-size: 8px;
+            line-height: 1.3;
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+
+        /* Experience - condensed format */
+        .ultra-condensed-resume .experience-item {
+            margin-bottom: 6px;
+            page-break-inside: avoid;
+        }
+
+        .ultra-condensed-resume .experience-item:last-child {
+            margin-bottom: 8px;
+        }
+
+        .ultra-condensed-resume .job-header {
+            margin-bottom: 2px;
+        }
+
+        .ultra-condensed-resume .job-title {
+            font-weight: bold;
+            font-size: 9px;
+            line-height: 1.1;
+            margin-bottom: 1px;
+        }
+
+        .ultra-condensed-resume .company-period {
+            font-size: 8px;
+            color: #333;
+            font-style: italic;
+            margin-bottom: 2px;
+        }
+
+        .ultra-condensed-resume .achievements {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .ultra-condensed-resume .achievements li {
+            font-size: 8px;
+            margin-bottom: 1px;
+            padding-left: 8px;
+            position: relative;
+            line-height: 1.2;
+        }
+
+        .ultra-condensed-resume .achievements li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-size: 6px;
+        }
+
+        /* Skills - inline tags */
+        .ultra-condensed-resume .skills {
+            margin-bottom: 8px;
+        }
+
+        .ultra-condensed-resume .skill-tag {
+            display: inline;
+            font-size: 7px;
+            margin-right: 4px;
+            font-weight: 500;
+        }
+
+        .ultra-condensed-resume .skill-tag:after {
+            content: " • ";
+        }
+
+        .ultra-condensed-resume .skill-tag:last-child:after {
+            content: "";
+        }
+
+        /* Education - very minimal */
+        .ultra-condensed-resume .education-item {
+            margin-bottom: 3px;
+            font-size: 8px;
+        }
+
+        .ultra-condensed-resume .degree {
+            font-weight: bold;
+            margin-bottom: 1px;
+        }
+
+        .ultra-condensed-resume .school-year {
+            font-style: italic;
+            color: #333;
+        }
+
         /* PDF-optimized cover letter styles */
         .pdf-cover-letter {
             width: 380px; /* Mobile-optimized width */
@@ -826,60 +985,61 @@
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
-        <div class="header">
+        <!-- Hero Section -->
+        <div class="hero-section">
             <h1>tinyCV</h1>
-            <p>Upload your resume, and get a mobile-optimized CV</p>
+            <p class="tagline">AI that cuts through the resume noise</p>
         </div>
 
-        <!-- Tab Navigation -->
-        <div class="tab-container">
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Tab Navigation -->
             <div class="tab-navigation">
-                <button class="tab-button active" onclick="switchTab('jobseeker')">For Job seeker</button>
-                <button class="tab-button" onclick="switchTab('employer')">For Employer</button>
+                <button class="tab-button active" onclick="switchTab('jobseeker')">Job seeker</button>
+                <button class="tab-button" onclick="switchTab('employer')">Employer</button>
             </div>
 
             <!-- Job Seeker Tab Content -->
             <div id="jobseekerTab" class="tab-content active">
+                <div class="form-container">
         
-        <!-- Upload Section -->
-        <div class="card">
-            <h2>Upload Resume & Job Details</h2>
-            
-            <!-- PDF Upload -->
-            <div class="form-group">
-                <label class="form-label">Resume PDF</label>
-                <div id="dropZone" class="drop-zone">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                    </svg>
-                    <p class="main-text">Click to upload or drag and drop your resume PDF</p>
-                    <p class="sub-text">PDF files only</p>
-                    <input type="file" id="pdfInput" accept=".pdf" style="display: none;">
-                </div>
-                <div id="fileInfo" class="file-info hidden"></div>
-            </div>
+                    <!-- Upload your resume -->
+                    <div class="form-group">
+                        <label class="form-label">Upload your resume<span class="required">*</span></label>
+                        <div id="dropZone" class="upload-area">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 12l2 2 4-4"></path>
+                            </svg>
+                            <p class="upload-text">PDFs only | Max 5MB</p>
+                            <input type="file" id="pdfInput" accept=".pdf" style="display: none;">
+                        </div>
+                        <div id="fileInfo" class="file-info hidden"></div>
+                    </div>
 
-            <!-- Job URL Input -->
-            <div class="form-group">
-                <label for="jobUrl" class="form-label">Job Posting URL (Optional)</label>
-                <input type="url" id="jobUrl" class="form-input" placeholder="https://company.com/job-posting">
-                <p class="form-help">Leave empty to generate only an optimized resume without cover letter</p>
-            </div>
+                    <!-- LinkedIn profile link -->
+                    <div class="form-group">
+                        <label for="linkedinUrl" class="form-label">Your LinkedIn profile link<span class="required">*</span></label>
+                        <input type="url" id="linkedinUrl" class="form-input" placeholder="https://linkedin.com/in/yourprofile">
+                    </div>
 
-            <!-- OpenAI API Key -->
-            <div class="form-group">
-                <label for="apiKey" class="form-label">OpenAI API Key</label>
-                <input type="password" id="apiKey" class="form-input" placeholder="sk-...">
-                <p class="form-help">Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a></p>
-            </div>
+                    <!-- Job Description Link -->
+                    <div class="form-group">
+                        <label for="jobUrl" class="form-label">Link of Job Description (where you are applying)</label>
+                        <input type="url" id="jobUrl" class="form-input" placeholder="https://company.com/job-posting">
+                        <p class="form-help">Leave empty of you don't want a cover letter</p>
+                    </div>
 
-            <!-- Process Button -->
-            <button id="processBtn" class="btn btn-primary">
-                <span id="btnText">Optimize Resume</span>
-                <div id="btnSpinner" class="spinner hidden"></div>
-            </button>
-        </div>
+                    <!-- OpenAI API Key -->
+                    <div class="form-group">
+                        <label for="apiKey" class="form-label">OpenAI API Key (Will be removed later)</label>
+                        <input type="password" id="apiKey" class="form-input" placeholder="sk-...">
+                    </div>
+
+                    <!-- Generate Button -->
+                    <button id="processBtn" class="btn btn-primary">
+                        <span id="btnText">Generate tinyCV</span>
+                        <div id="btnSpinner" class="spinner hidden"></div>
+                    </button>
 
         <!-- Results Section -->
         <div id="resultsSection" class="hidden">
@@ -956,19 +1116,24 @@
             <span id="errorText"></span>
         </div>
         
-        </div> <!-- End Job Seeker Tab -->
+                </div>
+            </div> <!-- End Job Seeker Tab -->
 
-        <!-- Employer Tab Content -->
-        <div id="employerTab" class="tab-content">
-            <div class="card">
-                <h2>For Employers</h2>
-                <p style="color: #6b7280; font-size: 1.1rem; text-align: center; padding: 3rem 1rem;">
-                    Coming soon! This section will contain tools and features designed specifically for employers.
-                </p>
+            <!-- Employer Tab Content -->
+            <div id="employerTab" class="tab-content">
+                <div class="form-container">
+                    <div style="text-align: center; padding: 4rem 2rem; color: var(--text-secondary);">
+                        <h3 style="margin-bottom: 1rem; color: var(--text-primary);">For Employers</h3>
+                        <p>Coming soon! This section will contain tools and features designed specifically for employers.</p>
+                    </div>
+                </div>
             </div>
-        </div>
+        </div> <!-- End Main Content -->
 
-        </div> <!-- End Tab Container -->
+        <!-- Footer -->
+        <div class="footer">
+            Made for and while learning AI | Singapore
+        </div>
     </div>
 
     <script>
@@ -1105,6 +1270,14 @@
             }
 
             const fileSize = (file.size / 1024 / 1024).toFixed(2);
+            
+            // Update upload area to show selected file
+            const uploadText = document.querySelector('.upload-text');
+            if (uploadText) {
+                uploadText.textContent = `✓ ${file.name.length > 30 ? file.name.substring(0, 30) + '...' : file.name}`;
+                uploadText.style.color = '#059669';
+            }
+            
             fileInfo.innerHTML = `
                 <div>Selected: <strong>${file.name}</strong> (${fileSize} MB)</div>
                 <div id="pdfStatus">Processing PDF...</div>
@@ -1327,7 +1500,7 @@
                 let jsonStructure;
                 
                 if (hasJobPosting) {
-                    userContent = `Create an optimized mobile-friendly resume and cover letter based on this resume and job posting.
+                    userContent = `Create an ULTRA-CONDENSED single-page resume and cover letter that fits within strict space constraints.
 
 RESUME:
 ${resume}
@@ -1335,13 +1508,16 @@ ${resume}
 JOB POSTING:
 ${jobPosting}
 
-IMPORTANT INSTRUCTIONS:
-- Use ONLY information that is explicitly stated in the resume
-- Do NOT make assumptions or add information not present in the original resume
-- If a field is unclear or missing, use the exact text from the resume or leave it as provided
-- Do NOT guess dates, institution names, or any other details
-- Focus on mobile-friendly format, job posting keywords, and quantified achievements
-- Preserve the actual information from the resume accurately`;
+ULTRA-CONDENSED FORMAT REQUIREMENTS:
+- Maximum 2-3 lines for summary (executive summary style)
+- Maximum 2-3 most relevant experience positions only
+- Maximum 1-2 bullet points per job (most impactful achievements only)
+- Maximum 8-10 most relevant skills
+- Education: degree and school only, no additional details
+- Use ONLY information explicitly stated in the resume
+- Prioritize job-relevant content over chronological completeness
+- Focus on quantified achievements and keywords from job posting
+- Every word must add value - eliminate all filler content`;
                     
                     jsonStructure = `{
   "optimizedResume": {
@@ -1370,18 +1546,21 @@ IMPORTANT INSTRUCTIONS:
   }
 }`;
                 } else {
-                    userContent = `Create an optimized mobile-friendly resume based on this resume text.
+                    userContent = `Create an ULTRA-CONDENSED single-page resume that fits within strict space constraints.
 
 RESUME:
 ${resume}
 
-IMPORTANT INSTRUCTIONS:
-- Use ONLY information that is explicitly stated in the resume
-- Do NOT make assumptions or add information not present in the original resume
-- If a field is unclear or missing, use the exact text from the resume or leave it as provided
-- Do NOT guess dates, institution names, or any other details
-- Focus on mobile-friendly format, improved structure, and quantified achievements
-- Preserve the actual information from the resume accurately`;
+ULTRA-CONDENSED FORMAT REQUIREMENTS:
+- Maximum 2-3 lines for summary (executive summary style)
+- Maximum 2-3 most relevant experience positions only
+- Maximum 1-2 bullet points per job (most impactful achievements only)
+- Maximum 8-10 most relevant skills
+- Education: degree and school only, no additional details
+- Use ONLY information explicitly stated in the resume
+- Prioritize most impressive and quantified achievements
+- Every word must add value - eliminate all filler content
+- Focus on results, metrics, and impact over responsibilities`;
                     
                     jsonStructure = `{
   "optimizedResume": {
@@ -1563,9 +1742,14 @@ ${jsonStructure}`
         }
 
         function generatePreviews(content, hasJobPosting) {
-            // Generate resume HTML
-            const resumeHtml = createResumeTemplate(content.optimizedResume);
+            // Generate ultra-condensed resume HTML
+            const resumeHtml = createUltraCondensedTemplate(content.optimizedResume);
             document.getElementById('resumePreview').innerHTML = resumeHtml;
+
+            // Apply dynamic sizing to ensure content fits within 1200px
+            setTimeout(() => {
+                optimizeContentHeight('resumePreview');
+            }, 100);
 
             // Enable resume download button
             document.getElementById('downloadResume').disabled = false;
@@ -1650,6 +1834,120 @@ ${jsonStructure}`
             `;
         }
 
+        function createUltraCondensedTemplate(resume) {
+            return `
+                <div class="ultra-condensed-resume">
+                    <!-- Header -->
+                    <div class="header">
+                        <h1>${resume.name}</h1>
+                        <div class="contact">${resume.contact}</div>
+                    </div>
+
+                    <!-- Two-column layout -->
+                    <div class="content">
+                        <!-- Main column - Experience and Summary -->
+                        <div class="main-column">
+                            ${resume.summary ? `
+                            <div class="summary">${resume.summary}</div>
+                            ` : ''}
+
+                            ${resume.experience && resume.experience.length > 0 ? `
+                            <h2>Experience</h2>
+                            ${resume.experience.slice(0, 3).map(exp => `
+                                <div class="experience-item">
+                                    <div class="job-header">
+                                        <div class="job-title">${exp.title}</div>
+                                        <div class="company-period">${exp.company} | ${exp.period}</div>
+                                    </div>
+                                    ${exp.achievements && exp.achievements.length > 0 ? `
+                                    <ul class="achievements">
+                                        ${exp.achievements.slice(0, 2).map(achievement => `
+                                            <li>${achievement}</li>
+                                        `).join('')}
+                                    </ul>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                            ` : ''}
+                        </div>
+
+                        <!-- Sidebar - Skills and Education -->
+                        <div class="sidebar">
+                            ${resume.skills && resume.skills.length > 0 ? `
+                            <h2>Skills</h2>
+                            <div class="skills">
+                                ${resume.skills.slice(0, 10).map(skill => `
+                                    <span class="skill-tag">${skill}</span>
+                                `).join('')}
+                            </div>
+                            ` : ''}
+
+                            ${resume.education && resume.education.length > 0 ? `
+                            <h2>Education</h2>
+                            ${resume.education.slice(0, 2).map(edu => `
+                                <div class="education-item">
+                                    <div class="degree">${edu.degree}</div>
+                                    <div class="school-year">${edu.school} | ${edu.year}</div>
+                                </div>
+                            `).join('')}
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function optimizeContentHeight(elementId) {
+            const element = document.getElementById(elementId);
+            const resumeContainer = element.querySelector('.ultra-condensed-resume');
+            
+            if (!resumeContainer) return;
+            
+            const maxHeight = 1200;
+            const currentHeight = resumeContainer.scrollHeight;
+            
+            if (currentHeight > maxHeight) {
+                console.log(`Content height (${currentHeight}px) exceeds limit (${maxHeight}px). Applying scaling...`);
+                
+                // Calculate scale factor
+                const scaleFactor = Math.min(0.95, maxHeight / currentHeight);
+                
+                // Apply scaling to font sizes
+                const baseFont = 9;
+                const newBaseFont = Math.max(6, baseFont * scaleFactor);
+                
+                // Update font sizes proportionally
+                resumeContainer.style.fontSize = `${newBaseFont}px`;
+                
+                // Scale specific elements
+                const h1 = resumeContainer.querySelector('h1');
+                if (h1) h1.style.fontSize = `${Math.max(12, 16 * scaleFactor)}px`;
+                
+                const h2s = resumeContainer.querySelectorAll('h2');
+                h2s.forEach(h2 => {
+                    h2.style.fontSize = `${Math.max(8, 11 * scaleFactor)}px`;
+                });
+                
+                const contact = resumeContainer.querySelector('.contact');
+                if (contact) contact.style.fontSize = `${Math.max(6, 8 * scaleFactor)}px`;
+                
+                // Reduce margins and padding if still too large
+                if (scaleFactor < 0.8) {
+                    resumeContainer.style.padding = '12px';
+                    resumeContainer.style.lineHeight = '1.1';
+                    
+                    const experienceItems = resumeContainer.querySelectorAll('.experience-item');
+                    experienceItems.forEach(item => {
+                        item.style.marginBottom = '4px';
+                    });
+                }
+                
+                console.log(`Applied scaling factor: ${scaleFactor.toFixed(2)}, new font size: ${newBaseFont}px`);
+            } else {
+                console.log(`Content fits within height limit (${currentHeight}px <= ${maxHeight}px)`);
+            }
+        }
+
         function createCoverLetterTemplate(coverLetter) {
             return `
                 <div class="mobile-resume">
@@ -1687,16 +1985,22 @@ ${jsonStructure}`
             pdfContainer.style.justifyContent = 'center';
             
             // Clone the content and apply PDF styling
-            const mobileContent = originalElement.querySelector('.mobile-resume');
+            const mobileContent = originalElement.querySelector('.mobile-resume') || originalElement.querySelector('.ultra-condensed-resume');
             if (!mobileContent) {
                 throw new Error('Content not found for PDF generation');
             }
             
             const contentClone = mobileContent.cloneNode(true);
             
-            // Determine if this is a resume or cover letter
+            // Determine if this is a resume or cover letter and preserve ultra-condensed formatting
             const isResume = elementId === 'resumePreview';
-            contentClone.className = isResume ? 'pdf-resume' : 'pdf-cover-letter';
+            const isUltraCondensed = mobileContent.classList.contains('ultra-condensed-resume');
+            
+            if (isUltraCondensed) {
+                contentClone.className = 'ultra-condensed-resume';
+            } else {
+                contentClone.className = isResume ? 'pdf-resume' : 'pdf-cover-letter';
+            }
             
             // Apply resume-specific formatting
             if (isResume) {
