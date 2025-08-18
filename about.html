@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - tinyCV</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        /* CSS Variables for Bright Theme */
+        :root {
+            --primary-blue: #3b82f6;
+            --accent-cyan: #5de3ff;
+            --primary-hover: #2563eb;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --background: #ffffff;
+            --background-soft: #f8fafc;
+            --border-light: #e2e8f0;
+            --border-medium: #cbd5e1;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --border-radius: 12px;
+            --border-radius-sm: 8px;
+        }
+
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            margin: 0;
+            transition: all 0.2s ease;
+        }
+
+        .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #4f46e5 0%, #059669 25%, #4f46e5 50%, #059669 75%, #4f46e5 100%);
+            background-size: 400% 100%;
+            animation: gradientFlow 106s ease-in-out infinite;
+            color: white;
+            padding: 1.5rem 2rem;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+            12% {
+                background-position: 80% 15%;
+            }
+            28% {
+                background-position: 150% 75%;
+            }
+            35% {
+                background-position: 190% 45%;
+            }
+            47% {
+                background-position: 320% 85%;
+            }
+            56% {
+                background-position: 270% 25%;
+            }
+            69% {
+                background-position: 380% 60%;
+            }
+            78% {
+                background-position: 220% 90%;
+            }
+            89% {
+                background-position: 420% 35%;
+            }
+            100% {
+                background-position: 450% 50%;
+            }
+        }
+
+        /* Logo Section */
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .hero-section h1 {
+            font-family: 'American Typewriter', 'Courier New', monospace;
+            font-size: 3rem;
+            font-weight: 400;
+            margin: 0;
+            color: white;
+        }
+
+        .hero-section h1 a {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .hero-section h1 a:hover {
+            opacity: 0.8;
+            transform: scale(1.02);
+        }
+
+        .hero-section .tagline {
+            font-size: 1.2rem;
+            font-weight: 300;
+            opacity: 0.95;
+            margin: 0;
+        }
+
+        /* Navigation */
+        .nav-bar {
+            display: flex;
+            gap: 2rem;
+            z-index: 10;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            opacity: 0.9;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+            transform: translateY(-1px);
+        }
+
+        .nav-link.active {
+            opacity: 1;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2rem 2rem 2rem;
+            width: 100%;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-light);
+            margin-top: auto;
+        }
+
+        .footer a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 1rem;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-start;
+            }
+
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-section h1 a:hover {
+                transform: scale(1.01);
+            }
+
+            .hero-section .tagline {
+                font-size: 1rem;
+            }
+
+            .nav-bar {
+                align-self: flex-start;
+                gap: 1.5rem;
+                margin: 1rem;
+            }
+
+            /* Hide Home link on mobile */
+            .nav-link[href="index.html"] {
+                display: none;
+            }
+
+            .nav-link {
+                font-size: 0.9rem;
+            }
+
+            .main-content {
+                padding: 1.5rem 1rem;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="logo-section">
+                <h1><a href="index.html">tinyCV</a></h1>
+                <p class="tagline">✨ AI that cuts through the resume noise</p>
+            </div>
+            <nav class="nav-bar">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link active">About</a>
+            </nav>
+        </div>
+
+        <!-- Main Content (Empty) -->
+        <div class="main-content">
+            <!-- Content will be added here later -->
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            Made by <a href="https://nimkarkedar.com" target="_blank">Kedar Nimkar</a> and <a href="https://www.linkedin.com/in/prateekproduct/" target="_blank">Prateek Jain</a> with ❤️ in Singapore
+        </div>
+    </div>
+</body>
+</html>

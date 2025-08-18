@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Processing - tinyCV</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.54/build/pdf.min.mjs" type="module"></script>
     <script type="module">
         // Import PDF.js as ES module
@@ -59,18 +60,62 @@
 
         /* Hero Section */
         .hero-section {
-            background: linear-gradient(135deg, #4f46e5 0%, #059669 100%);
+            background: linear-gradient(135deg, #4f46e5 0%, #059669 25%, #4f46e5 50%, #059669 75%, #4f46e5 100%);
+            background-size: 400% 100%;
+            animation: gradientFlow 106s ease-in-out infinite;
             color: white;
-            text-align: center;
-            padding: 4rem 2rem;
+            padding: 1.5rem 2rem;
             position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+            12% {
+                background-position: 80% 15%;
+            }
+            28% {
+                background-position: 150% 75%;
+            }
+            35% {
+                background-position: 190% 45%;
+            }
+            47% {
+                background-position: 320% 85%;
+            }
+            56% {
+                background-position: 270% 25%;
+            }
+            69% {
+                background-position: 380% 60%;
+            }
+            78% {
+                background-position: 220% 90%;
+            }
+            89% {
+                background-position: 420% 35%;
+            }
+            100% {
+                background-position: 450% 50%;
+            }
+        }
+
+        /* Logo Section */
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
         .hero-section h1 {
             font-family: 'American Typewriter', 'Courier New', monospace;
-            font-size: 4rem;
+            font-size: 3rem;
             font-weight: 400;
-            margin-bottom: 1rem;
+            margin: 0;
             color: white;
         }
 
@@ -87,19 +132,44 @@
         }
 
         .hero-section .tagline {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 300;
             opacity: 0.95;
-            max-width: 600px;
-            margin: 0 auto;
+            margin: 0;
+        }
+
+        /* Navigation */
+        .nav-bar {
+            display: flex;
+            gap: 2rem;
+            z-index: 10;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            opacity: 0.9;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+            transform: translateY(-1px);
+        }
+
+        .nav-link.active {
+            opacity: 1;
+            font-weight: 500;
         }
 
         /* Processing Content */
         .processing-content {
             flex: 1;
-            max-width: 720px;
+            max-width: 500px;
             margin: 0 auto;
-            padding: 3rem 2rem;
+            padding: 2rem 2rem;
             width: 100%;
             display: flex;
             flex-direction: column;
@@ -109,8 +179,8 @@
 
         /* Animated Titles */
         .animated-titles {
-            margin-bottom: 4rem;
-            height: 120px;
+            margin-bottom: 3rem;
+            height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -178,8 +248,8 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
+            margin-bottom: 1.25rem;
+            font-size: 1rem;
         }
 
         .processing-step .step-indicator {
@@ -243,6 +313,16 @@
             margin-top: auto;
         }
 
+        .footer a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
         /* Error message */
         .error-message {
             background: #fee2e2;
@@ -261,13 +341,47 @@
 
         /* Responsive design */
         @media (max-width: 768px) {
+            .hero-section {
+                padding: 1rem 1rem 2.5rem 1rem;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-start;
+            }
+
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-section h1 a:hover {
+                transform: scale(1.01); /* Smaller scale on mobile */
+            }
+
+            .hero-section .tagline {
+                font-size: 1rem;
+            }
+
+            .nav-bar {
+                align-self: flex-start;
+                gap: 1.5rem;
+                margin: 1rem;
+            }
+
+            /* Hide Home link on mobile */
+            .nav-link[href="index.html"] {
+                display: none;
+            }
+
+            .nav-link {
+                font-size: 0.9rem;
+            }
+
             .processing-content {
-                padding: 2rem 1rem;
+                padding: 1.5rem 1rem;
             }
 
             .animated-titles {
                 height: 80px;
-                margin-bottom: 3rem;
+                margin-bottom: 2rem;
             }
 
             .title-text {
@@ -275,16 +389,8 @@
             }
 
             .processing-step {
-                font-size: 1rem;
+                font-size: 0.9rem;
                 margin-bottom: 1rem;
-            }
-
-            .hero-section h1 {
-                font-size: 3rem;
-            }
-
-            .hero-section h1 a:hover {
-                transform: scale(1.01); /* Smaller scale on mobile */
             }
         }
     </style>
@@ -293,8 +399,14 @@
     <div class="container">
         <!-- Hero Section -->
         <div class="hero-section">
-            <h1><a href="index.html">tinyCV</a></h1>
-            <p class="tagline">AI that cuts through the resume noise</p>
+            <div class="logo-section">
+                <h1><a href="index.html">tinyCV</a></h1>
+                <p class="tagline">✨ AI that cuts through the resume noise</p>
+            </div>
+            <nav class="nav-bar">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+            </nav>
         </div>
 
         <!-- Processing Content -->
@@ -338,7 +450,7 @@
 
         <!-- Footer -->
         <div class="footer">
-            Made for and while learning AI | Singapore
+            Made by <a href="https://nimkarkedar.com" target="_blank">Kedar Nimkar</a> and <a href="https://www.linkedin.com/in/prateekproduct/" target="_blank">Prateek Jain</a> with ❤️ in Singapore
         </div>
     </div>
 

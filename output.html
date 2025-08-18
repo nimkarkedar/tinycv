@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Download tinyCV</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- Google Fonts for Professional Font Combinations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600&family=Lora:wght@400;500;600&family=Open+Sans:wght@300;400;600&family=Lato:wght@300;400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         /* CSS Variables for Bright Theme */
         :root {
@@ -24,7 +30,33 @@
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             --border-radius: 12px;
             --border-radius-sm: 8px;
+            
+            /* Resume Customization Variables */
+            --heading-font: Georgia, serif;
+            --body-font: system-ui, -apple-system, sans-serif;
+            --resume-primary: #1f2937;
+            --resume-secondary: #6b7280;
+            --resume-accent: #e5e7eb;
+            --resume-text: #1f2937;
+            --resume-bg: #ffffff;
         }
+
+        /* Font Combination Classes */
+        .font-serif-classic {
+            --heading-font: 'Georgia', serif;
+            --body-font: 'Lato', sans-serif;
+        }
+
+        .font-modern-clean {
+            --heading-font: 'Helvetica', sans-serif;
+            --body-font: 'Lato', sans-serif;
+        }
+
+        .font-tech-mono {
+            --heading-font: 'Courier New', monospace;
+            --body-font: 'Lato', sans-serif;
+        }
+
 
         /* Reset and base styles */
         * {
@@ -51,18 +83,62 @@
 
         /* Hero Section */
         .hero-section {
-            background: linear-gradient(135deg, #4f46e5 0%, #059669 100%);
+            background: linear-gradient(135deg, #4f46e5 0%, #059669 25%, #4f46e5 50%, #059669 75%, #4f46e5 100%);
+            background-size: 400% 100%;
+            animation: gradientFlow 106s ease-in-out infinite;
             color: white;
-            text-align: center;
-            padding: 4rem 2rem;
+            padding: 1.5rem 2rem;
             position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+            12% {
+                background-position: 80% 15%;
+            }
+            28% {
+                background-position: 150% 75%;
+            }
+            35% {
+                background-position: 190% 45%;
+            }
+            47% {
+                background-position: 320% 85%;
+            }
+            56% {
+                background-position: 270% 25%;
+            }
+            69% {
+                background-position: 380% 60%;
+            }
+            78% {
+                background-position: 220% 90%;
+            }
+            89% {
+                background-position: 420% 35%;
+            }
+            100% {
+                background-position: 450% 50%;
+            }
+        }
+
+        /* Logo Section */
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
         .hero-section h1 {
             font-family: 'American Typewriter', 'Courier New', monospace;
-            font-size: 4rem;
+            font-size: 3rem;
             font-weight: 400;
-            margin-bottom: 1rem;
+            margin: 0;
             color: white;
         }
 
@@ -79,26 +155,53 @@
         }
 
         .hero-section .tagline {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 300;
             opacity: 0.95;
-            max-width: 600px;
-            margin: 0 auto;
+            margin: 0;
+        }
+
+        /* Navigation */
+        .nav-bar {
+            display: flex;
+            gap: 2rem;
+            z-index: 10;
+            position: relative;
+            top: -2rem;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            opacity: 0.9;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+            transform: translateY(-1px);
+        }
+
+        .nav-link.active {
+            opacity: 1;
+            font-weight: 500;
         }
 
         /* Main Content */
         .main-content {
             flex: 1;
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 3rem 2rem;
+            padding: 2rem 2rem;
             width: 100%;
         }
 
         /* Success Header */
         .success-header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
         }
 
         .success-header h2 {
@@ -118,7 +221,7 @@
             background: var(--background-soft);
             border-radius: var(--border-radius);
             padding: 1.5rem;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             border: 1px solid var(--border-light);
         }
 
@@ -169,7 +272,8 @@
         }
 
         .download-btn {
-            background: linear-gradient(135deg, #4f46e5, #059669);
+            background: linear-gradient(135deg, #4f46e5 0%, #059669 25%, #4f46e5 50%, #059669 75%, #4f46e5 100%);
+            background-size: 400% 100%;
             color: white;
             padding: 0.75rem 2rem;
             border: none;
@@ -184,7 +288,7 @@
         .download-btn:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-lg);
-            background: linear-gradient(135deg, #4338ca, #047857);
+            animation: gradientFlow 10s ease-in-out infinite;
         }
 
         .download-btn:disabled {
@@ -196,29 +300,31 @@
 
         /* Resume Preview */
         .resume-preview {
-            border: 2px solid var(--border-light);
-            border-radius: var(--border-radius-sm);
-            padding: 2rem;
             background: white;
-            min-height: 600px;
             overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
         }
 
         /* Mobile resume styles */
         .mobile-resume {
-            width: 100%;
-            max-width: 600px;
+            width: 360px;
+            max-width: 360px;
             margin: 0 auto;
-            font-family: system-ui, -apple-system, sans-serif;
+            font-family: var(--body-font);
             line-height: 1.4;
-            color: #1f2937;
+            color: #000000;
+            background-color: #ffffff;
             font-size: 14px;
+            padding: 1rem;
         }
 
         .mobile-resume h1 {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #1f2937;
+            font-family: var(--heading-font);
+            color: #000000;
             margin-bottom: 0.5rem;
             text-align: center;
         }
@@ -226,28 +332,30 @@
         .mobile-resume h2 {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #1f2937;
+            font-family: var(--heading-font);
+            color: #000000;
             margin: 1.5rem 0 0.75rem 0;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid #cccccc;
             padding-bottom: 0.25rem;
         }
 
         .mobile-resume h3 {
             font-weight: 600;
-            color: #1f2937;
+            font-family: var(--heading-font);
+            color: #000000;
             margin-bottom: 0.5rem;
         }
 
         .mobile-resume .contact {
             font-size: 0.9rem;
-            color: #6b7280;
+            color: #666666;
             margin-bottom: 1.5rem;
             text-align: center;
         }
 
         .mobile-resume .summary {
             font-size: 0.9rem;
-            color: #374151;
+            color: #000000;
             margin-bottom: 1.5rem;
             text-align: justify;
         }
@@ -260,18 +368,19 @@
         }
 
         .mobile-resume .skill-tag {
-            background: #dbeafe;
-            color: #1e40af;
+            background: #f0f0f0;
+            color: #000000;
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 500;
+            border: 1px solid #cccccc;
         }
 
         .mobile-resume .experience-item {
             margin-bottom: 1.5rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid #eeeeee;
         }
 
         .mobile-resume .experience-item:last-child {
@@ -288,19 +397,19 @@
 
         .mobile-resume .job-title {
             font-weight: 600;
-            color: #1f2937;
+            color: #000000;
             font-size: 1rem;
         }
 
         .mobile-resume .company {
             font-size: 0.9rem;
-            color: #6b7280;
+            color: #666666;
             font-style: italic;
         }
 
         .mobile-resume .period {
             font-size: 0.8rem;
-            color: #9ca3af;
+            color: #666666;
             white-space: nowrap;
             margin-left: auto;
         }
@@ -312,7 +421,7 @@
 
         .mobile-resume .achievements li {
             font-size: 0.9rem;
-            color: #374151;
+            color: #000000;
             margin-bottom: 0.5rem;
             padding-left: 1rem;
             position: relative;
@@ -322,7 +431,7 @@
             content: "•";
             position: absolute;
             left: 0;
-            color: #6b7280;
+            color: #000000;
         }
 
         .mobile-resume .education-item {
@@ -334,17 +443,17 @@
 
         .mobile-resume .degree {
             font-weight: 600;
-            color: #1f2937;
+            color: #000000;
         }
 
         .mobile-resume .school {
             font-size: 0.9rem;
-            color: #6b7280;
+            color: #666666;
         }
 
         .mobile-resume .year {
             font-size: 0.9rem;
-            color: #9ca3af;
+            color: #666666;
             margin-left: auto;
         }
 
@@ -358,28 +467,16 @@
             margin-top: auto;
         }
 
-        /* Back button */
-        .back-btn {
-            position: fixed;
-            top: 2rem;
-            left: 2rem;
-            background: var(--background);
-            border: 2px solid var(--border-light);
-            border-radius: 50px;
-            padding: 0.75rem 1.5rem;
-            color: var(--text-primary);
+        .footer a {
+            color: var(--primary-blue);
             text-decoration: none;
-            font-weight: 500;
             transition: all 0.3s ease;
-            box-shadow: var(--shadow-sm);
         }
 
-        .back-btn:hover {
-            border-color: var(--primary-blue);
-            color: var(--primary-blue);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
+        .footer a:hover {
+            text-decoration: underline;
         }
+
 
         .hidden {
             display: none !important;
@@ -387,16 +484,50 @@
 
         /* Responsive design */
         @media (max-width: 768px) {
-            .main-content {
-                padding: 2rem 1rem;
+            .hero-section {
+                padding: 1rem 1rem 2.5rem 1rem;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-start;
             }
 
             .hero-section h1 {
-                font-size: 3rem;
+                font-size: 2.5rem;
+            }
+
+            .hero-section h1 a:hover {
+                transform: scale(1.01); /* Smaller scale on mobile */
+            }
+
+            .hero-section .tagline {
+                font-size: 1rem;
+            }
+
+            .nav-bar {
+                align-self: flex-start;
+                gap: 1.5rem;
+                margin: 1rem;
+            }
+
+            /* Hide Home link on mobile */
+            .nav-link[href="index.html"] {
+                display: none;
+            }
+
+            .nav-link {
+                font-size: 0.9rem;
+            }
+
+            .main-content {
+                padding: 1.5rem 1rem;
             }
 
             .success-header h2 {
                 font-size: 2rem;
+            }
+
+            .success-header {
+                margin-bottom: 1.5rem;
             }
 
             .section-header {
@@ -405,16 +536,6 @@
                 align-items: stretch;
             }
 
-            .back-btn {
-                position: static;
-                margin: 1rem auto;
-                display: block;
-                width: fit-content;
-            }
-
-            .hero-section h1 a:hover {
-                transform: scale(1.01); /* Smaller scale on mobile */
-            }
 
             .mobile-resume .job-header {
                 flex-direction: column;
@@ -429,13 +550,16 @@
 </head>
 <body>
     <div class="container">
-        <!-- Back Button -->
-        <a href="index.html" class="back-btn">← Start Over</a>
-
         <!-- Hero Section -->
         <div class="hero-section">
-            <h1><a href="index.html">tinyCV</a></h1>
-            <p class="tagline">AI that cuts through the resume noise</p>
+            <div class="logo-section">
+                <h1><a href="index.html">tinyCV</a></h1>
+                <p class="tagline">✨ AI that cuts through the resume noise</p>
+            </div>
+            <nav class="nav-bar">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+            </nav>
         </div>
 
         <!-- Main Content -->
@@ -448,13 +572,17 @@
 
             <!-- Theme Selector -->
             <div class="theme-selector">
-                <h3>Change theme</h3>
-                <select class="theme-dropdown" id="themeSelector">
-                    <option value="serif">Serif</option>
-                    <option value="modern">Modern</option>
-                    <option value="minimal">Minimal</option>
-                    <option value="professional">Professional</option>
-                </select>
+                <h3>Choose Font Style</h3>
+                <div class="customization-controls">
+                    <div class="font-selection">
+                        <label for="fontCombo">Font Style:</label>
+                        <select class="theme-dropdown" id="fontCombo">
+                            <option value="serif-classic">Serif Classic (Georgia + Lato)</option>
+                            <option value="modern-clean">Modern Clean (Helvetica + Lato)</option>
+                            <option value="tech-mono">Tech Mono (Courier New + Lato)</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
             <!-- Resume Section -->
@@ -482,7 +610,7 @@
 
         <!-- Footer -->
         <div class="footer">
-            Made for and while learning AI | Singapore
+            Made by <a href="https://nimkarkedar.com" target="_blank">Kedar Nimkar</a> and <a href="https://www.linkedin.com/in/prateekproduct/" target="_blank">Prateek Jain</a> with ❤️ in Singapore
         </div>
     </div>
 
@@ -490,7 +618,7 @@
         // Global variables
         let optimizedContent = null;
         let hasJobPosting = false;
-        let currentTheme = 'serif';
+        let currentFontCombo = 'serif-classic';
 
         // Load results from localStorage
         function loadResults() {
@@ -508,8 +636,8 @@
             return true;
         }
 
-        // Generate resume HTML based on theme
-        function generateResumeHTML(theme = 'serif') {
+        // Generate resume HTML with customization classes
+        function generateResumeHTML() {
             if (!optimizedContent || !optimizedContent.optimizedResume) {
                 return '<p>No resume data available</p>';
             }
@@ -517,9 +645,9 @@
             const resume = optimizedContent.optimizedResume;
             
             return `
-                <div class="mobile-resume theme-${theme}">
+                <div class="mobile-resume font-${currentFontCombo}">
                     <!-- Header Section -->
-                    <div style="text-align: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid #e5e7eb;">
+                    <div style="text-align: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--resume-secondary);">
                         <h1>${resume.name || 'Name Not Found'}</h1>
                         <p class="contact">${resume.contact || 'Contact information not found'}</p>
                     </div>
@@ -593,12 +721,43 @@
             const coverLetter = optimizedContent.coverLetter;
             
             return `
-                <div class="mobile-resume">
+                <div class="mobile-resume font-${currentFontCombo}">
                     ${coverLetter.content.split('\n').map(paragraph => 
-                        paragraph.trim() ? `<p style="margin-bottom: 1.5rem; line-height: 1.6; text-align: justify;">${paragraph.trim()}</p>` : ''
+                        paragraph.trim() ? `<p style="margin-bottom: 1.5rem; line-height: 1.6; text-align: justify; color: var(--resume-text);">${paragraph.trim()}</p>` : ''
                     ).join('')}
                 </div>
             `;
+        }
+
+        // Apply customization to resume
+        function applyCustomization() {
+            // Regenerate resume with new customization
+            document.getElementById('resumePreview').innerHTML = generateResumeHTML();
+            
+            // Regenerate cover letter if available
+            if (hasJobPosting && optimizedContent.coverLetter) {
+                document.getElementById('coverLetterPreview').innerHTML = generateCoverLetterHTML();
+            }
+            
+            // Save preferences to localStorage
+            localStorage.setItem('tinyCV_fontPreference', currentFontCombo);
+        }
+
+        // Handle font combination change
+        function handleFontChange() {
+            const fontSelector = document.getElementById('fontCombo');
+            currentFontCombo = fontSelector.value;
+            applyCustomization();
+        }
+
+        // Load saved preferences
+        function loadPreferences() {
+            const savedFont = localStorage.getItem('tinyCV_fontPreference');
+            
+            if (savedFont) {
+                currentFontCombo = savedFont;
+                document.getElementById('fontCombo').value = savedFont;
+            }
         }
 
         // Update resume title with user's name
@@ -637,14 +796,6 @@
             }
         }
 
-        // Theme change handler
-        function handleThemeChange() {
-            const themeSelector = document.getElementById('themeSelector');
-            currentTheme = themeSelector.value;
-            
-            // Regenerate resume with new theme
-            document.getElementById('resumePreview').innerHTML = generateResumeHTML(currentTheme);
-        }
 
         // Initialize page
         function initializePage() {
@@ -652,11 +803,14 @@
                 return;
             }
 
+            // Load saved preferences
+            loadPreferences();
+
             // Update resume title
             updateResumeTitle();
 
             // Generate initial resume
-            document.getElementById('resumePreview').innerHTML = generateResumeHTML(currentTheme);
+            document.getElementById('resumePreview').innerHTML = generateResumeHTML();
 
             // Handle cover letter section
             const coverLetterSection = document.getElementById('coverLetterSection');
@@ -668,7 +822,7 @@
             }
 
             // Set up event listeners
-            document.getElementById('themeSelector').addEventListener('change', handleThemeChange);
+            document.getElementById('fontCombo').addEventListener('change', handleFontChange);
             
             document.getElementById('downloadResume').addEventListener('click', () => {
                 const firstName = optimizedContent.optimizedResume.name ? 

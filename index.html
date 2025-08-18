@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>tinyCV</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.54/build/pdf.min.mjs" type="module"></script>
     <script type="module">
         // Import PDF.js as ES module
@@ -61,65 +62,146 @@
 
         /* Hero Section */
         .hero-section {
-            background: linear-gradient(135deg, #4f46e5 0%, #059669 100%);
+            background: linear-gradient(135deg, #4f46e5 0%, #059669 25%, #4f46e5 50%, #059669 75%, #4f46e5 100%);
+            background-size: 400% 100%;
+            animation: gradientFlow 106s ease-in-out infinite;
             color: white;
-            text-align: center;
-            padding: 4rem 2rem;
+            padding: 2rem 2rem 3rem 2rem;
             position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+            12% {
+                background-position: 80% 15%;
+            }
+            28% {
+                background-position: 150% 75%;
+            }
+            35% {
+                background-position: 190% 45%;
+            }
+            47% {
+                background-position: 320% 85%;
+            }
+            56% {
+                background-position: 270% 25%;
+            }
+            69% {
+                background-position: 380% 60%;
+            }
+            78% {
+                background-position: 220% 90%;
+            }
+            89% {
+                background-position: 420% 35%;
+            }
+            100% {
+                background-position: 450% 50%;
+            }
+        }
+
+        /* Logo Section */
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
         .hero-section h1 {
             font-family: 'American Typewriter', 'Courier New', monospace;
-            font-size: 4rem;
+            font-size: 3rem;
             font-weight: 400;
-            margin-bottom: 1rem;
+            margin: 0;
             color: white;
         }
 
         .hero-section .tagline {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 300;
             opacity: 0.95;
-            max-width: 600px;
-            margin: 0 auto;
+            margin: 0;
+        }
+
+        /* Navigation */
+        .nav-bar {
+            display: flex;
+            gap: 2rem;
+            z-index: 10;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            opacity: 0.9;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+            transform: translateY(-1px);
+        }
+
+        .nav-link.active {
+            opacity: 1;
+            font-weight: 500;
         }
 
         /* Main Content */
         .main-content {
             flex: 1;
-            max-width: 720px;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 3rem 2rem;
+            padding: 0 2rem 2rem 2rem;
             width: 100%;
         }
 
         /* Tab Navigation */
         .tab-navigation {
             display: flex;
-            gap: 1rem;
+            background: white;
+            border-radius: 50px;
+            padding: 0.25rem;
+            margin-top: -1rem;
             margin-bottom: 3rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            border: 1px solid #ddd;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 10;
         }
 
         .tab-button {
-            padding: 1rem 2rem;
+            padding: 1rem 2.5rem;
             border: none;
-            background: var(--background-soft);
+            background: none;
             font-size: 1rem;
             font-weight: 500;
             color: var(--text-secondary);
             cursor: pointer;
             border-radius: 50px;
             transition: all 0.3s ease;
-            border: 2px solid transparent;
+            white-space: nowrap;
         }
 
-        .tab-button:hover {
+        .tab-button:hover:not(.active) {
+            background: #f3f4f6;
             color: var(--text-primary);
         }
 
         .tab-button.active {
-            background: var(--text-primary);
+            background: #1f2937;
             color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .tab-content {
@@ -138,16 +220,38 @@
             border: none;
         }
 
+        /* Description Text */
+        .description-text {
+            text-align: left;
+            margin-bottom: 2.5rem;
+            padding: 0 1rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .description-text p {
+            color: var(--text-primary);
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        .description-text .italic-part {
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
         /* Form elements */
         .form-group {
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
 
         .form-label {
             display: block;
             font-weight: 500;
             color: var(--text-primary);
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             font-size: 1.1rem;
         }
 
@@ -193,6 +297,13 @@
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
+            max-width: 700px;
+            margin: 0 auto;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .upload-area:hover, .upload-area.drag-over {
@@ -209,13 +320,14 @@
 
         .upload-area .upload-text {
             color: var(--text-secondary);
-            font-size: 1rem;
+            font-size: 1.1rem;
             margin: 0;
+            font-weight: 500;
         }
 
         .upload-area .upload-subtext {
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             margin-top: 0.5rem;
         }
 
@@ -263,7 +375,8 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #4f46e5, #059669);
+            background: linear-gradient(135deg, #4f46e5 0%, #059669 25%, #4f46e5 50%, #059669 75%, #4f46e5 100%);
+            background-size: 400% 100%;
             color: white;
             width: 100%;
             justify-content: center;
@@ -277,7 +390,7 @@
         .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: var(--shadow-lg);
-            background: linear-gradient(135deg, #4338ca, #047857);
+            animation: gradientFlow 10s ease-in-out infinite;
         }
 
         .btn-primary:active {
@@ -319,6 +432,16 @@
             font-size: 0.9rem;
             border-top: 1px solid var(--border-light);
             margin-top: auto;
+        }
+
+        .footer a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
         }
 
         /* Loading spinner */
@@ -965,12 +1088,73 @@
 
         /* Responsive design */
         @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
+            .hero-section {
+                padding: 1rem 1rem 2.5rem 1rem;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-start;
             }
 
-            .header h1 {
-                font-size: 2rem;
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-section .tagline {
+                font-size: 1rem;
+            }
+
+            .nav-bar {
+                align-self: flex-start;
+                gap: 1.5rem;
+                margin: 1rem;
+            }
+
+            /* Hide Home link on mobile */
+            .nav-link[href="index.html"] {
+                display: none;
+            }
+
+            .nav-link {
+                font-size: 0.9rem;
+            }
+
+            .main-content {
+                padding: 0 1rem 1.5rem 1rem;
+                max-width: 100%;
+            }
+
+            .tab-navigation {
+                margin-top: -0.75rem;
+                margin-bottom: 2rem;
+            }
+
+            .description-text {
+                margin-bottom: 2rem;
+                padding: 0 0.5rem;
+            }
+
+            .description-text p {
+                font-size: 0.9rem;
+            }
+
+            .upload-area {
+                max-width: 100%;
+                padding: 1.5rem 1rem;
+                min-height: 80px;
+            }
+
+            .upload-area svg {
+                width: 32px;
+                height: 32px;
+                margin-bottom: 0.5rem;
+            }
+
+            .upload-area .upload-text {
+                font-size: 0.95rem;
+            }
+
+            .form-group {
+                margin-bottom: 1.5rem;
             }
 
             .card {
@@ -980,7 +1164,6 @@
             .preview-content {
                 height: 300px;
             }
-
         }
     </style>
 </head>
@@ -988,8 +1171,14 @@
     <div class="container">
         <!-- Hero Section -->
         <div class="hero-section">
-            <h1>tinyCV</h1>
-            <p class="tagline">AI that cuts through the resume noise</p>
+            <div class="logo-section">
+                <h1>tinyCV</h1>
+                <p class="tagline">✨ AI that cuts through the resume noise</p>
+            </div>
+            <nav class="nav-bar">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+            </nav>
         </div>
 
         <!-- Main Content -->
@@ -998,6 +1187,11 @@
             <div class="tab-navigation">
                 <button class="tab-button active" onclick="switchTab('jobseeker')">Job seeker</button>
                 <button class="tab-button" onclick="switchTab('employer')">Employer</button>
+            </div>
+
+            <!-- Description Text -->
+            <div class="description-text" id="jobSeekerDescription">
+                <p>If you are a job seeker and wanting to apply with a tinyCV, fill the following details and make your resume noise free - <span class="italic-part">Easy for recruiters to scan and cut the noise</span></p>
             </div>
 
             <!-- Job Seeker Tab Content -->
@@ -1133,7 +1327,7 @@
 
         <!-- Footer -->
         <div class="footer">
-            Made for and while learning AI | Singapore
+            Made by <a href="https://nimkarkedar.com" target="_blank">Kedar Nimkar</a> and <a href="https://www.linkedin.com/in/prateekproduct/" target="_blank">Prateek Jain</a> with ❤️ in Singapore
         </div>
     </div>
 
@@ -1152,6 +1346,14 @@
             // Add active class to selected tab and button
             document.querySelector(`button[onclick="switchTab('${tabName}')"]`).classList.add('active');
             document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            // Show/hide description text based on selected tab
+            const description = document.getElementById('jobSeekerDescription');
+            if (tabName === 'jobseeker') {
+                description.style.display = 'block';
+            } else {
+                description.style.display = 'none';
+            }
         }
 
         // Add global error handler
