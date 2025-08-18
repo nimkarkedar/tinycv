@@ -980,6 +980,7 @@
             .preview-content {
                 height: 300px;
             }
+
         }
     </style>
 </head>
@@ -1433,51 +1434,37 @@
 
         async function processResume() {
             setLoading(true);
-            resultsSection.classList.remove('hidden');
-
-            const hasJobPosting = jobUrl.value.trim() !== '';
+            
+            // Validate required fields
+            if (!resumeText) {
+                showError('Please upload a resume PDF first');
+                setLoading(false);
+                return;
+            }
+            
+            if (!apiKey.value) {
+                showError('Please enter your OpenAI API key');
+                setLoading(false);
+                return;
+            }
 
             try {
-                // Step 1: Extract resume text (already done)
-                updateStep(1, 'complete');
-
-                // Step 2: Get job posting content (if URL provided)
-                updateStep(2, 'loading');
-                updateStepText(2, hasJobPosting ? 'Analyzing job requirements...' : 'Skipping job analysis (no URL provided)...');
-                if (hasJobPosting) {
-                    jobPostingText = await fetchJobPosting(jobUrl.value);
-                } else {
-                    jobPostingText = '';
-                }
-                updateStep(2, 'complete');
-
-                // Step 3: Optimize with AI
-                updateStep(3, 'loading');
-                optimizedContent = await optimizeWithAI(resumeText, jobPostingText, apiKey.value, hasJobPosting);
-                updateStep(3, 'complete');
-
-                // Step 4: Generate templates
-                updateStep(4, 'loading');
-                generatePreviews(optimizedContent, hasJobPosting);
-                updateStep(4, 'complete');
-
+                // Save processing data to localStorage
+                const processingData = {
+                    resumeText: resumeText,
+                    jobUrl: jobUrl.value.trim(),
+                    apiKey: apiKey.value,
+                    linkedinUrl: document.getElementById('linkedinUrl').value.trim()
+                };
+                
+                localStorage.setItem('tinyCV_processingData', JSON.stringify(processingData));
+                
+                // Redirect to processing page
+                window.location.href = 'processing.html';
+                
             } catch (error) {
-                console.error('Resume processing error:', error);
-                
-                let errorMessage = 'Processing failed: ' + error.message;
-                
-                // Provide specific guidance for common errors
-                if (error.message.includes('JSON')) {
-                    errorMessage += '\n\nThis appears to be a formatting issue with the AI response. Try again, or use the manual input option.';
-                } else if (error.message.includes('API key')) {
-                    errorMessage += '\n\nPlease check your OpenAI API key is correct and has sufficient credits.';
-                } else if (error.message.includes('429') || error.message.includes('rate limit')) {
-                    errorMessage += '\n\nRate limit exceeded. Please wait a moment and try again.';
-                }
-                
-                showError(errorMessage);
-                updateStep(getCurrentStep(), 'error');
-            } finally {
+                console.error('Error saving data:', error);
+                showError('Failed to save processing data. Please try again.');
                 setLoading(false);
             }
         }

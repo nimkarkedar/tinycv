@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download tinyCV</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        /* CSS Variables for Bright Theme */
+        :root {
+            --primary-blue: #3b82f6;
+            --accent-cyan: #5de3ff;
+            --primary-hover: #2563eb;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --background: #ffffff;
+            --background-soft: #f8fafc;
+            --border-light: #e2e8f0;
+            --border-medium: #cbd5e1;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --border-radius: 12px;
+            --border-radius-sm: 8px;
+        }
+
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            margin: 0;
+            transition: all 0.2s ease;
+        }
+
+        .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #4f46e5 0%, #059669 100%);
+            color: white;
+            text-align: center;
+            padding: 4rem 2rem;
+            position: relative;
+        }
+
+        .hero-section h1 {
+            font-family: 'American Typewriter', 'Courier New', monospace;
+            font-size: 4rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .hero-section h1 a {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .hero-section h1 a:hover {
+            opacity: 0.8;
+            transform: scale(1.02);
+        }
+
+        .hero-section .tagline {
+            font-size: 1.5rem;
+            font-weight: 300;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            width: 100%;
+        }
+
+        /* Success Header */
+        .success-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .success-header h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .success-header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        /* Theme Selector */
+        .theme-selector {
+            background: var(--background-soft);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .theme-selector h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .theme-dropdown {
+            width: 100%;
+            max-width: 300px;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-light);
+            border-radius: var(--border-radius-sm);
+            background: var(--background);
+            font-size: 1rem;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .theme-dropdown:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        /* Resume Preview Section */
+        .resume-section {
+            background: var(--background);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #4f46e5, #059669);
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            background: linear-gradient(135deg, #4338ca, #047857);
+        }
+
+        .download-btn:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Resume Preview */
+        .resume-preview {
+            border: 2px solid var(--border-light);
+            border-radius: var(--border-radius-sm);
+            padding: 2rem;
+            background: white;
+            min-height: 600px;
+            overflow-y: auto;
+        }
+
+        /* Mobile resume styles */
+        .mobile-resume {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.4;
+            color: #1f2937;
+            font-size: 14px;
+        }
+
+        .mobile-resume h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .mobile-resume h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 1.5rem 0 0.75rem 0;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.25rem;
+        }
+
+        .mobile-resume h3 {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .mobile-resume .contact {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .mobile-resume .summary {
+            font-size: 0.9rem;
+            color: #374151;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        .mobile-resume .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .mobile-resume .skill-tag {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .mobile-resume .experience-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .mobile-resume .experience-item:last-child {
+            border-bottom: none;
+        }
+
+        .mobile-resume .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .mobile-resume .job-title {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1rem;
+        }
+
+        .mobile-resume .company {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .mobile-resume .period {
+            font-size: 0.8rem;
+            color: #9ca3af;
+            white-space: nowrap;
+            margin-left: auto;
+        }
+
+        .mobile-resume .achievements {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mobile-resume .achievements li {
+            font-size: 0.9rem;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .mobile-resume .achievements li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #6b7280;
+        }
+
+        .mobile-resume .education-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .mobile-resume .degree {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .mobile-resume .school {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .mobile-resume .year {
+            font-size: 0.9rem;
+            color: #9ca3af;
+            margin-left: auto;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-light);
+            margin-top: auto;
+        }
+
+        /* Back button */
+        .back-btn {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            background: var(--background);
+            border: 2px solid var(--border-light);
+            border-radius: 50px;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .back-btn:hover {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 2rem 1rem;
+            }
+
+            .hero-section h1 {
+                font-size: 3rem;
+            }
+
+            .success-header h2 {
+                font-size: 2rem;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+
+            .back-btn {
+                position: static;
+                margin: 1rem auto;
+                display: block;
+                width: fit-content;
+            }
+
+            .hero-section h1 a:hover {
+                transform: scale(1.01); /* Smaller scale on mobile */
+            }
+
+            .mobile-resume .job-header {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .mobile-resume .period {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Back Button -->
+        <a href="index.html" class="back-btn">← Start Over</a>
+
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1><a href="index.html">tinyCV</a></h1>
+            <p class="tagline">AI that cuts through the resume noise</p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Success Header -->
+            <div class="success-header">
+                <h2>Wonderful! Here's your tinyCV</h2>
+                <p>Your resume has been optimized and is ready for download</p>
+            </div>
+
+            <!-- Theme Selector -->
+            <div class="theme-selector">
+                <h3>Change theme</h3>
+                <select class="theme-dropdown" id="themeSelector">
+                    <option value="serif">Serif</option>
+                    <option value="modern">Modern</option>
+                    <option value="minimal">Minimal</option>
+                    <option value="professional">Professional</option>
+                </select>
+            </div>
+
+            <!-- Resume Section -->
+            <div class="resume-section">
+                <div class="section-header">
+                    <h3 id="resumeTitle">Kedar's tinyCV</h3>
+                    <button class="download-btn" id="downloadResume">Download tinyCV</button>
+                </div>
+                <div class="resume-preview" id="resumePreview">
+                    <!-- Resume content will be populated here -->
+                </div>
+            </div>
+
+            <!-- Cover Letter Section (only if job posting was provided) -->
+            <div class="resume-section" id="coverLetterSection">
+                <div class="section-header">
+                    <h3>Cover Letter</h3>
+                    <button class="download-btn" id="downloadCoverLetter">Download Cover Letter</button>
+                </div>
+                <div class="resume-preview" id="coverLetterPreview">
+                    <!-- Cover letter content will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            Made for and while learning AI | Singapore
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let optimizedContent = null;
+        let hasJobPosting = false;
+        let currentTheme = 'serif';
+
+        // Load results from localStorage
+        function loadResults() {
+            const resultsData = localStorage.getItem('tinyCV_results');
+            if (!resultsData) {
+                // Redirect back to input page if no results
+                window.location.href = 'index.html';
+                return false;
+            }
+
+            const results = JSON.parse(resultsData);
+            optimizedContent = results.optimizedContent;
+            hasJobPosting = results.hasJobPosting;
+
+            return true;
+        }
+
+        // Generate resume HTML based on theme
+        function generateResumeHTML(theme = 'serif') {
+            if (!optimizedContent || !optimizedContent.optimizedResume) {
+                return '<p>No resume data available</p>';
+            }
+
+            const resume = optimizedContent.optimizedResume;
+            
+            return `
+                <div class="mobile-resume theme-${theme}">
+                    <!-- Header Section -->
+                    <div style="text-align: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid #e5e7eb;">
+                        <h1>${resume.name || 'Name Not Found'}</h1>
+                        <p class="contact">${resume.contact || 'Contact information not found'}</p>
+                    </div>
+
+                    ${resume.summary ? `
+                    <!-- Professional Summary Section -->
+                    <div style="margin-bottom: 2rem;">
+                        <h2>Professional Summary</h2>
+                        <p class="summary">${resume.summary}</p>
+                    </div>
+                    ` : ''}
+
+                    <!-- Skills Section -->
+                    ${resume.skills && resume.skills.length > 0 ? `
+                    <div style="margin-bottom: 2rem;">
+                        <h2>Key Skills</h2>
+                        <div class="skills">
+                            ${resume.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    <!-- Experience Section -->
+                    ${resume.experience && resume.experience.length > 0 ? `
+                    <div style="margin-bottom: 2rem;">
+                        <h2>Experience</h2>
+                        ${resume.experience.map(exp => `
+                            <div class="experience-item">
+                                <div class="job-header">
+                                    <div>
+                                        <div class="job-title">${exp.title || 'Job Title'}</div>
+                                        <div class="company">${exp.company || 'Company'}</div>
+                                    </div>
+                                    <div class="period">${exp.period || 'Period'}</div>
+                                </div>
+                                ${exp.achievements && exp.achievements.length > 0 ? `
+                                <ul class="achievements">
+                                    ${exp.achievements.map(achievement => `<li>${achievement}</li>`).join('')}
+                                </ul>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                    ` : ''}
+
+                    <!-- Education Section -->
+                    ${resume.education && resume.education.length > 0 ? `
+                    <div>
+                        <h2>Education</h2>
+                        ${resume.education.map(edu => `
+                            <div class="education-item">
+                                <div>
+                                    <div class="degree">${edu.degree || 'Degree'}</div>
+                                    <div class="school">${edu.school || 'School'}</div>
+                                </div>
+                                <div class="year">${edu.year || 'Year'}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // Generate cover letter HTML
+        function generateCoverLetterHTML() {
+            if (!optimizedContent || !optimizedContent.coverLetter) {
+                return '<p>No cover letter available</p>';
+            }
+
+            const coverLetter = optimizedContent.coverLetter;
+            
+            return `
+                <div class="mobile-resume">
+                    ${coverLetter.content.split('\n').map(paragraph => 
+                        paragraph.trim() ? `<p style="margin-bottom: 1.5rem; line-height: 1.6; text-align: justify;">${paragraph.trim()}</p>` : ''
+                    ).join('')}
+                </div>
+            `;
+        }
+
+        // Update resume title with user's name
+        function updateResumeTitle() {
+            if (optimizedContent && optimizedContent.optimizedResume && optimizedContent.optimizedResume.name) {
+                const firstName = optimizedContent.optimizedResume.name.split(' ')[0];
+                document.getElementById('resumeTitle').textContent = `${firstName}'s tinyCV`;
+            }
+        }
+
+        // Download as PDF
+        async function downloadAsPDF(elementId, filename) {
+            const element = document.getElementById(elementId);
+            
+            try {
+                const canvas = await html2canvas(element, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff'
+                });
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 210; // A4 width in mm
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                
+                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                pdf.save(filename);
+                
+            } catch (error) {
+                console.error('PDF generation error:', error);
+                alert('Error generating PDF. Please try again.');
+            }
+        }
+
+        // Theme change handler
+        function handleThemeChange() {
+            const themeSelector = document.getElementById('themeSelector');
+            currentTheme = themeSelector.value;
+            
+            // Regenerate resume with new theme
+            document.getElementById('resumePreview').innerHTML = generateResumeHTML(currentTheme);
+        }
+
+        // Initialize page
+        function initializePage() {
+            if (!loadResults()) {
+                return;
+            }
+
+            // Update resume title
+            updateResumeTitle();
+
+            // Generate initial resume
+            document.getElementById('resumePreview').innerHTML = generateResumeHTML(currentTheme);
+
+            // Handle cover letter section
+            const coverLetterSection = document.getElementById('coverLetterSection');
+            if (hasJobPosting && optimizedContent.coverLetter) {
+                document.getElementById('coverLetterPreview').innerHTML = generateCoverLetterHTML();
+                coverLetterSection.style.display = 'block';
+            } else {
+                coverLetterSection.style.display = 'none';
+            }
+
+            // Set up event listeners
+            document.getElementById('themeSelector').addEventListener('change', handleThemeChange);
+            
+            document.getElementById('downloadResume').addEventListener('click', () => {
+                const firstName = optimizedContent.optimizedResume.name ? 
+                    optimizedContent.optimizedResume.name.split(' ')[0] : 'resume';
+                downloadAsPDF('resumePreview', `${firstName}-tinyCV.pdf`);
+            });
+
+            if (hasJobPosting) {
+                document.getElementById('downloadCoverLetter').addEventListener('click', () => {
+                    const firstName = optimizedContent.optimizedResume.name ? 
+                        optimizedContent.optimizedResume.name.split(' ')[0] : 'cover-letter';
+                    downloadAsPDF('coverLetterPreview', `${firstName}-cover-letter.pdf`);
+                });
+            }
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', initializePage);
+    </script>
+</body>
+</html>
