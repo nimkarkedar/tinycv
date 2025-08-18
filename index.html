@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume Optimizer</title>
+    <title>tinyCV</title>
     <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.54/build/pdf.min.mjs" type="module"></script>
     <script type="module">
         // Import PDF.js as ES module
@@ -17,6 +17,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
+        /* CSS Variables for Bright Theme */
+        :root {
+            --primary-blue: #3b82f6;
+            --accent-cyan: #5de3ff;
+            --primary-hover: #2563eb;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --background: #ffffff;
+            --background-soft: #f8fafc;
+            --border-light: #e2e8f0;
+            --border-medium: #cbd5e1;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --border-radius: 12px;
+            --border-radius-sm: 8px;
+        }
+
         /* Reset and base styles */
         * {
             margin: 0;
@@ -26,10 +45,11 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f9fafb;
-            color: #374151;
+            background-color: var(--background-soft);
+            color: var(--text-primary);
             line-height: 1.6;
             min-height: 100vh;
+            transition: all 0.2s ease;
         }
 
         .container {
@@ -45,80 +65,161 @@
         }
 
         .header h1 {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #1f2937;
-            margin-bottom: 0.5rem;
+            font-family: 'American Typewriter', 'Courier New', monospace;
+            font-size: 3rem;
+            font-weight: 400;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .header p {
-            color: #6b7280;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Tab Navigation */
+        .tab-container {
+            margin-bottom: 4rem;
+        }
+
+        .tab-navigation {
+            display: flex;
+            background: var(--background);
+            border-radius: var(--border-radius);
+            padding: 0.5rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 3rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 1rem 2rem;
+            border: none;
+            background: transparent;
             font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--border-radius-sm);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-button:hover {
+            color: var(--text-primary);
+            background-color: var(--background-soft);
+            transform: translateY(-1px);
+        }
+
+        .tab-button.active {
+            color: var(--background);
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-cyan));
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         /* Cards */
         .card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
+            background: var(--background);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            padding: 2.5rem;
             margin-bottom: 2rem;
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+            border-color: var(--border-medium);
         }
 
         .card h2 {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: #1f2937;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         /* Form elements */
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .form-label {
             display: block;
             font-weight: 500;
-            color: #374151;
-            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
         }
 
         .form-input {
             width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #d1d5db;
-            border-radius: 8px;
+            padding: 1rem;
+            border: 2px solid var(--border-light);
+            border-radius: var(--border-radius-sm);
             font-size: 1rem;
-            transition: border-color 0.2s;
+            transition: all 0.3s ease;
+            background-color: var(--background);
+            color: var(--text-primary);
         }
 
         .form-input:focus {
             outline: none;
-            border-color: #3b82f6;
+            border-color: var(--primary-blue);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-input:hover {
+            border-color: var(--border-medium);
         }
 
         .form-help {
             font-size: 0.875rem;
-            color: #6b7280;
-            margin-top: 0.25rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
         }
 
         /* Drop zone */
         .drop-zone {
-            border: 3px dashed #d1d5db;
-            border-radius: 12px;
+            border: 3px dashed var(--border-medium);
+            border-radius: var(--border-radius);
             padding: 3rem 1rem;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s;
-            background: #f9fafb;
+            transition: all 0.3s ease;
+            background: var(--background-soft);
         }
 
         .drop-zone:hover, .drop-zone.drag-over {
-            border-color: #3b82f6;
-            background: #eff6ff;
+            border-color: var(--primary-blue);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(93, 227, 255, 0.05));
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
         }
 
         .drop-zone svg {
@@ -154,47 +255,66 @@
 
         /* Buttons */
         .btn {
-            padding: 0.75rem 1.5rem;
+            padding: 1rem 2rem;
             border: none;
-            border-radius: 8px;
+            border-radius: var(--border-radius-sm);
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             text-decoration: none;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
         }
 
         .btn-primary {
-            background: #3b82f6;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-cyan));
             color: white;
             width: 100%;
             justify-content: center;
+            box-shadow: var(--shadow-md);
+            font-size: 1.1rem;
+            padding: 1.25rem 2rem;
         }
 
         .btn-primary:hover:not(:disabled) {
-            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            background: linear-gradient(135deg, var(--primary-hover), var(--primary-blue));
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
         }
 
         .btn-primary:disabled {
-            background: #9ca3af;
+            background: var(--text-muted);
             cursor: not-allowed;
+            transform: none;
+            box-shadow: var(--shadow-sm);
         }
 
         .btn-success {
-            background: #059669;
+            background: linear-gradient(135deg, #059669, #10b981);
             color: white;
             font-size: 0.875rem;
+            padding: 0.75rem 1.5rem;
+            box-shadow: var(--shadow-sm);
         }
 
         .btn-success:hover:not(:disabled) {
-            background: #047857;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+            background: linear-gradient(135deg, #047857, #059669);
         }
 
         .btn-success:disabled {
-            background: #9ca3af;
+            background: var(--text-muted);
             cursor: not-allowed;
+            transform: none;
         }
 
         /* Loading spinner */
@@ -708,10 +828,20 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>Resume Optimizer</h1>
-            <p>Upload your resume and optionally add job posting details to get a mobile-optimized CV and cover letter</p>
+            <h1>tinyCV</h1>
+            <p>Upload your resume, and get a mobile-optimized CV</p>
         </div>
 
+        <!-- Tab Navigation -->
+        <div class="tab-container">
+            <div class="tab-navigation">
+                <button class="tab-button active" onclick="switchTab('jobseeker')">For Job seeker</button>
+                <button class="tab-button" onclick="switchTab('employer')">For Employer</button>
+            </div>
+
+            <!-- Job Seeker Tab Content -->
+            <div id="jobseekerTab" class="tab-content active">
+        
         <!-- Upload Section -->
         <div class="card">
             <h2>Upload Resume & Job Details</h2>
@@ -825,6 +955,20 @@
         <div id="errorMessage" class="error-message hidden">
             <span id="errorText"></span>
         </div>
+        
+        </div> <!-- End Job Seeker Tab -->
+
+        <!-- Employer Tab Content -->
+        <div id="employerTab" class="tab-content">
+            <div class="card">
+                <h2>For Employers</h2>
+                <p style="color: #6b7280; font-size: 1.1rem; text-align: center; padding: 3rem 1rem;">
+                    Coming soon! This section will contain tools and features designed specifically for employers.
+                </p>
+            </div>
+        </div>
+
+        </div> <!-- End Tab Container -->
     </div>
 
     <script>
@@ -832,6 +976,17 @@
         let resumeText = '';
         let jobPostingText = '';
         let optimizedContent = null;
+
+        // Tab switching functionality
+        function switchTab(tabName) {
+            // Remove active class from all tabs and buttons
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected tab and button
+            document.querySelector(`button[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
 
         // Add global error handler
         window.addEventListener('error', function(e) {
