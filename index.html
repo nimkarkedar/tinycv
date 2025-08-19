@@ -1191,7 +1191,7 @@
 
             <!-- Description Text -->
             <div class="description-text" id="jobSeekerDescription">
-                <p>If you are a job seeker and wanting to apply with a tinyCV, fill the following details and make your resume noise free - <span class="italic-part">Easy for recruiters to scan and cut the noise</span></p>
+                <p>If you are a job seeker and wanting to apply with a tinyCV, upload your resume and make it noise free - <span class="italic-part">Easy for recruiters to scan and cut the noise. Optionally add your LinkedIn profile for enhanced data.</span></p>
             </div>
 
             <!-- Job Seeker Tab Content -->
@@ -1205,7 +1205,7 @@
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 12l2 2 4-4"></path>
                             </svg>
-                            <p class="upload-text">PDFs only | Max 5MB</p>
+                            <p class="upload-text">PDFs only | Max 5MB | Primary data source</p>
                             <input type="file" id="pdfInput" accept=".pdf" style="display: none;">
                         </div>
                         <div id="fileInfo" class="file-info hidden"></div>
@@ -1213,8 +1213,9 @@
 
                     <!-- LinkedIn profile link -->
                     <div class="form-group">
-                        <label for="linkedinUrl" class="form-label">Your LinkedIn profile link<span class="required">*</span></label>
+                        <label for="linkedinUrl" class="form-label">Your LinkedIn profile link (optional)</label>
                         <input type="url" id="linkedinUrl" class="form-input" placeholder="https://linkedin.com/in/yourprofile">
+                        <p class="form-help">Add LinkedIn for enhanced profile data (optional)</p>
                     </div>
 
                     <!-- Job Description Link -->
@@ -1619,12 +1620,11 @@
         processBtn.addEventListener('click', async () => {
             hideError();
             
-            // Validation
+            // Validation - Resume is required, LinkedIn is optional
             if (!resumeText) {
                 showError('Please upload a resume PDF first');
                 return;
             }
-            
             
             if (!apiKey.value) {
                 showError('Please enter your OpenAI API key');
@@ -1637,7 +1637,7 @@
         async function processResume() {
             setLoading(true);
             
-            // Validate required fields
+            // Validate required fields - Resume is required, LinkedIn is optional
             if (!resumeText) {
                 showError('Please upload a resume PDF first');
                 setLoading(false);
@@ -1653,7 +1653,7 @@
             try {
                 // Save processing data to localStorage
                 const processingData = {
-                    resumeText: resumeText,
+                    resumeText: resumeText || '', // Empty string if no resume uploaded
                     jobUrl: jobUrl.value.trim(),
                     apiKey: apiKey.value,
                     linkedinUrl: document.getElementById('linkedinUrl').value.trim()

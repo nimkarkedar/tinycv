@@ -422,7 +422,7 @@
             <div class="processing-steps">
                 <div class="processing-step">
                     <div id="step1" class="step-indicator"></div>
-                    <span class="step-text">Extracting resume text...</span>
+                    <span class="step-text">Processing profile data...</span>
                 </div>
                 <div class="processing-step">
                     <div id="step2" class="step-indicator"></div>
@@ -553,13 +553,36 @@
             const processingData = loadProcessingData();
             if (!processingData) return;
 
-            const { resumeText: inputResumeText, jobUrl, apiKey } = processingData;
+            const { resumeText: inputResumeText, jobUrl, apiKey, linkedinUrl } = processingData;
             resumeText = inputResumeText;
             
             const hasJobPosting = jobUrl && jobUrl.trim() !== '';
 
             try {
-                // Step 1: Extract resume text (already done)
+                // Step 1: Prepare profile data (LinkedIn optional)
+                await updateStep(1, 'loading');
+                
+                if (linkedinUrl && linkedinUrl.trim()) {
+                    updateStepText(1, 'Automatically scraping LinkedIn profile...');
+                    const linkedinData = await collectLinkedInData(linkedinUrl);
+                    resumeText = combineResumeData(inputResumeText, linkedinData);
+                    
+                    if (linkedinData.success) {
+                        updateStepText(1, 'LinkedIn profile data extracted successfully');
+                    } else {
+                        updateStepText(1, 'LinkedIn scraping failed - using resume only');
+                        console.warn('LinkedIn scraping failed:', linkedinData.error);
+                    }
+                } else {
+                    updateStepText(1, 'Processing resume data (LinkedIn not provided)');
+                    resumeText = inputResumeText || '';
+                }
+                
+                // Check if we have sufficient data to work with
+                if (!resumeText || resumeText.trim().length < 50) {
+                    throw new Error('Insufficient resume data. Please upload a resume PDF with sufficient content.');
+                }
+                
                 await updateStep(1, 'complete');
 
                 // Step 2: Get job posting content (if URL provided)
@@ -613,6 +636,200 @@
             }
         }
 
+        // LinkedIn data collection via intelligent extraction
+        async function collectLinkedInData(linkedinUrl) {
+            console.log('Attempting to extract LinkedIn profile data from:', linkedinUrl);
+            
+            try {
+                // Method 1: Try multiple CORS proxy services
+                const proxyServices = [
+                    'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(linkedinUrl),
+                    'https://cors-anywhere.herokuapp.com/' + linkedinUrl,
+                    'https://api.allorigins.win/get?url=' + encodeURIComponent(linkedinUrl)
+                ];
+                
+                for (let i = 0; i < proxyServices.length; i++) {
+                    try {
+                        console.log(`Trying proxy service ${i + 1}...`);
+                        
+                        const response = await fetch(proxyServices[i], {
+                            headers: {
+                                'User-Agent': 'Mozilla/5.0 (compatible; TinyCV/1.0)'
+                            }
+                        });
+                        
+                        if (!response.ok) continue;
+                        
+                        const data = await response.json();
+                        const htmlContent = data.contents || data.data || '';
+                        
+                        if (htmlContent && htmlContent.length > 1000) {
+                            const extractedData = extractLinkedInInfo(htmlContent, linkedinUrl);
+                            
+                            if (extractedData && extractedData.length > 100) {
+                                console.log('LinkedIn profile data extracted successfully via proxy', i + 1);
+                                return {
+                                    extractedData: extractedData,
+                                    success: true
+                                };
+                            }
+                        }
+                        
+                    } catch (proxyError) {
+                        console.log(`Proxy ${i + 1} failed:`, proxyError.message);
+                        continue;
+                    }
+                }
+                
+                // Method 2: Use OpenAI to help extract info from the URL pattern
+                console.log('Proxies failed, trying URL pattern analysis...');
+                return await analyzeLinkedInURL(linkedinUrl);
+                
+            } catch (error) {
+                console.error('All LinkedIn extraction methods failed:', error);
+                
+                // Final fallback: provide instructions for manual input
+                return {
+                    extractedData: `LinkedIn URL provided: ${linkedinUrl}\n\nNote: Automatic extraction failed due to LinkedIn's privacy settings. Please ensure your LinkedIn profile is set to public, or upload your resume PDF instead.`,
+                    success: false,
+                    error: error.message
+                };
+            }
+        }
+        
+        async function analyzeLinkedInURL(linkedinUrl) {
+            // Extract potential information from the URL pattern
+            const urlParts = linkedinUrl.split('/');
+            const username = urlParts[urlParts.length - 1] || urlParts[urlParts.length - 2];
+            
+            // Create a basic profile structure from URL
+            let basicInfo = `LinkedIn Profile: ${linkedinUrl}\n`;
+            basicInfo += `Username: ${username}\n\n`;
+            basicInfo += `Note: This profile requires manual verification. Please ensure:\n`;
+            basicInfo += `1. Your LinkedIn profile is set to public\n`;
+            basicInfo += `2. The URL is correct and accessible\n`;
+            basicInfo += `3. Consider uploading your resume PDF for better results\n\n`;
+            basicInfo += `We'll do our best to create a professional resume based on the information available.`;
+            
+            return {
+                extractedData: basicInfo,
+                success: false,
+                error: 'LinkedIn profile not accessible for automatic extraction'
+            };
+        }
+        
+        function extractLinkedInInfo(htmlContent, linkedinUrl) {
+            try {
+                // Create a temporary DOM element to parse HTML
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlContent, 'text/html');
+                
+                let extractedInfo = '';
+                
+                // Extract name from title or meta tags
+                const titleElement = doc.querySelector('title');
+                if (titleElement && titleElement.textContent) {
+                    const title = titleElement.textContent;
+                    // LinkedIn titles often format as "Name | LinkedIn" or "Name - Title | LinkedIn"
+                    const nameMatch = title.match(/^([^|]+?)(?:\s*\|\s*LinkedIn)?$/);
+                    if (nameMatch && nameMatch[1].trim() !== 'LinkedIn') {
+                        extractedInfo += `NAME: ${nameMatch[1].trim()}\n\n`;
+                    }
+                }
+                
+                // Try to extract from meta tags
+                const metaTitle = doc.querySelector('meta[property="og:title"]');
+                const metaDescription = doc.querySelector('meta[property="og:description"]');
+                
+                if (metaTitle && metaTitle.content && !extractedInfo.includes('NAME:')) {
+                    extractedInfo += `NAME: ${metaTitle.content.split('|')[0].trim()}\n\n`;
+                }
+                
+                if (metaDescription && metaDescription.content) {
+                    extractedInfo += `PROFESSIONAL SUMMARY: ${metaDescription.content}\n\n`;
+                }
+                
+                // Look for JSON-LD structured data (LinkedIn sometimes uses this)
+                const jsonScripts = doc.querySelectorAll('script[type="application/ld+json"]');
+                jsonScripts.forEach(script => {
+                    try {
+                        const jsonData = JSON.parse(script.textContent);
+                        if (jsonData.name) {
+                            extractedInfo += `NAME: ${jsonData.name}\n`;
+                        }
+                        if (jsonData.description) {
+                            extractedInfo += `DESCRIPTION: ${jsonData.description}\n`;
+                        }
+                        if (jsonData.jobTitle) {
+                            extractedInfo += `JOB TITLE: ${jsonData.jobTitle}\n`;
+                        }
+                    } catch (e) {
+                        // Ignore invalid JSON
+                    }
+                });
+                
+                // Extract any meaningful text content
+                const bodyText = doc.body?.textContent || htmlContent;
+                if (bodyText) {
+                    // Look for common patterns in LinkedIn text
+                    const patterns = [
+                        /(?:Experience|Work\s+Experience)[:\s]*(.*?)(?:\n\n|$)/i,
+                        /(?:About|Summary)[:\s]*(.*?)(?:\n\n|$)/i,
+                        /(?:Education)[:\s]*(.*?)(?:\n\n|$)/i,
+                        /(?:Skills)[:\s]*(.*?)(?:\n\n|$)/i
+                    ];
+                    
+                    patterns.forEach((pattern, index) => {
+                        const match = bodyText.match(pattern);
+                        if (match && match[1] && match[1].trim().length > 20) {
+                            const sectionNames = ['EXPERIENCE', 'ABOUT', 'EDUCATION', 'SKILLS'];
+                            extractedInfo += `${sectionNames[index]}: ${match[1].trim()}\n\n`;
+                        }
+                    });
+                }
+                
+                // If still no meaningful content, provide URL-based info
+                if (extractedInfo.length < 50) {
+                    const username = linkedinUrl.split('/').pop();
+                    extractedInfo = `LinkedIn Profile URL: ${linkedinUrl}\n`;
+                    extractedInfo += `Username: ${username}\n\n`;
+                    extractedInfo += `Note: Limited profile data could be extracted automatically. This may be due to:\n`;
+                    extractedInfo += `- Profile privacy settings\n`;
+                    extractedInfo += `- LinkedIn's anti-scraping measures\n`;
+                    extractedInfo += `- Network restrictions\n\n`;
+                    extractedInfo += `The AI will work with the available information and any uploaded resume data.`;
+                }
+                
+                console.log('Extracted LinkedIn info length:', extractedInfo.length);
+                return extractedInfo;
+                
+            } catch (parseError) {
+                console.error('Error parsing LinkedIn content:', parseError);
+                return `LinkedIn URL: ${linkedinUrl}\nExtraction failed: ${parseError.message}`;
+            }
+        }
+
+        function combineResumeData(resumeText, linkedinData) {
+            let combinedText = '';
+            
+            // Always include resume data if available
+            if (resumeText && resumeText.trim()) {
+                combinedText += 'RESUME DATA:\n' + resumeText.trim();
+            }
+            
+            // Add LinkedIn data if available and successfully extracted
+            if (linkedinData && linkedinData.success && linkedinData.extractedData) {
+                if (combinedText) combinedText += '\n\n';
+                combinedText += 'LINKEDIN PROFILE DATA:\n' + linkedinData.extractedData.trim();
+                console.log('Combined resume and LinkedIn data');
+            } else {
+                console.log('Using resume data only - LinkedIn not provided or extraction failed');
+            }
+            
+            console.log('Final combined data length:', combinedText.length);
+            return combinedText || resumeText || '';
+        }
+
         // Job posting fetch (simplified for MVP)
         async function fetchJobPosting(url) {
             return new Promise((resolve) => {
@@ -632,7 +849,7 @@
                 if (hasJobPosting) {
                     userContent = `Create an ULTRA-CONDENSED single-page resume and cover letter that fits within strict space constraints.
 
-RESUME:
+PROFILE DATA:
 ${resume}
 
 JOB POSTING:
@@ -644,41 +861,43 @@ ULTRA-CONDENSED FORMAT REQUIREMENTS:
 - Maximum 1-2 bullet points per job (most impactful achievements only)
 - Maximum 8-10 most relevant skills
 - Education: degree and school only, no additional details
-- Use ONLY information explicitly stated in the resume
+- Use ALL available information from the profile data provided
+- Focus primarily on resume content, supplement with LinkedIn data if available
 - Prioritize job-relevant content over chronological completeness
 - Focus on quantified achievements and keywords from job posting
-- Every word must add value - eliminate all filler content`;
+- Every word must add value - eliminate all filler content
+- Create a complete professional resume using the available data`;
                     
                     jsonStructure = `{
   "optimizedResume": {
-    "name": "[Extract exact name from resume]",
-    "contact": "[Extract exact contact info from resume]",
-    "summary": "[Create professional summary based on resume content]",
-    "skills": ["[Extract actual skills from resume]"],
+    "name": "[Extract exact name from resume data]",
+    "contact": "[Extract contact information from resume]",
+    "summary": "[Create professional summary based on resume content and job requirements]",
+    "skills": ["[Extract relevant skills from resume, prioritize job-matching skills]"],
     "experience": [
       {
-        "title": "[Extract exact job title from resume]",
-        "company": "[Extract exact company name from resume]",
-        "period": "[Extract exact dates/period from resume]",
-        "achievements": ["[Extract/optimize actual achievements from resume]"]
+        "title": "[Extract job titles from resume]",
+        "company": "[Extract company names from resume]",
+        "period": "[Extract employment dates from resume]",
+        "achievements": ["[Extract and optimize key achievements from resume]"]
       }
     ],
     "education": [
       {
-        "degree": "[Extract exact degree from resume]",
-        "school": "[Extract exact school name from resume]",
-        "year": "[Extract exact graduation year from resume]"
+        "degree": "[Extract degree from resume]",
+        "school": "[Extract school name from resume]",
+        "year": "[Extract graduation year from resume]"
       }
     ]
   },
   "coverLetter": {
-    "content": "Full cover letter text optimized for this specific job"
+    "content": "Professional cover letter optimized for this specific job using resume data"
   }
 }`;
                 } else {
                     userContent = `Create an ULTRA-CONDENSED single-page resume that fits within strict space constraints.
 
-RESUME:
+PROFILE DATA:
 ${resume}
 
 ULTRA-CONDENSED FORMAT REQUIREMENTS:
@@ -687,30 +906,32 @@ ULTRA-CONDENSED FORMAT REQUIREMENTS:
 - Maximum 1-2 bullet points per job (most impactful achievements only)
 - Maximum 8-10 most relevant skills
 - Education: degree and school only, no additional details
-- Use ONLY information explicitly stated in the resume
+- Use ALL available information from the profile data provided
+- Focus primarily on resume content, supplement with LinkedIn data if available
 - Prioritize most impressive and quantified achievements
 - Every word must add value - eliminate all filler content
-- Focus on results, metrics, and impact over responsibilities`;
+- Focus on results, metrics, and impact over responsibilities
+- Create a complete professional resume using the available data`;
                     
                     jsonStructure = `{
   "optimizedResume": {
-    "name": "[Extract exact name from resume]",
-    "contact": "[Extract exact contact info from resume]",
+    "name": "[Extract exact name from resume data]",
+    "contact": "[Extract contact information from resume]",
     "summary": "[Create professional summary based on resume content]",
-    "skills": ["[Extract actual skills from resume]"],
+    "skills": ["[Extract relevant skills from resume]"],
     "experience": [
       {
-        "title": "[Extract exact job title from resume]",
-        "company": "[Extract exact company name from resume]",
-        "period": "[Extract exact dates/period from resume]",
-        "achievements": ["[Extract/optimize actual achievements from resume]"]
+        "title": "[Extract job titles from resume]",
+        "company": "[Extract company names from resume]",
+        "period": "[Extract employment dates from resume]",
+        "achievements": ["[Extract and optimize key achievements from resume]"]
       }
     ],
     "education": [
       {
-        "degree": "[Extract exact degree from resume]",
-        "school": "[Extract exact school name from resume]",
-        "year": "[Extract exact graduation year from resume]"
+        "degree": "[Extract degree from resume]",
+        "school": "[Extract school name from resume]",
+        "year": "[Extract graduation year from resume]"
       }
     ]
   }
