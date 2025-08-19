@@ -553,7 +553,7 @@
             const processingData = loadProcessingData();
             if (!processingData) return;
 
-            const { resumeText: inputResumeText, linkedinUrl } = processingData;
+            const { resumeText: inputResumeText, linkedinUrl, apiKey } = processingData;
             resumeText = inputResumeText;
             
             const hasJobPosting = false; // Simplified - no job posting required
@@ -583,8 +583,7 @@
 
                 // Step 3: Optimize with AI
                 await updateStep(3, 'loading');
-                // OpenAI API key - stored securely
-                const apiKey = 'sk-proj-' + 'sKGctOoZQZ8iSJPg8cGltQbfm6xfs8FMVzgygE5aHrf-toUO3ztx45l79B6AVoyv90rxRbk0VMT3BlbkFJ' + 'RGqV2FKtilVqCKCbeA2SgGwOmyFbibNFxtdAya2XTx4Cmj0vt9XmXGNjCUoAFEzNqHabcj8IkA';
+                // Use API key provided by user (stored in localStorage temporarily)
                 optimizedContent = await optimizeWithAI(resumeText, jobPostingText, apiKey, hasJobPosting);
                 await updateStep(3, 'complete');
 

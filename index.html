@@ -1218,6 +1218,12 @@
                         <p class="form-help">Add LinkedIn for enhanced profile data (optional)</p>
                     </div>
 
+                    <!-- OpenAI API Key -->
+                    <div class="form-group">
+                        <label for="apiKey" class="form-label">OpenAI API Key<span class="required">*</span></label>
+                        <input type="password" id="apiKey" class="form-input" placeholder="sk-...">
+                        <p class="form-help">Your API key is used locally and not stored</p>
+                    </div>
 
                     <!-- Generate Button -->
                     <button id="processBtn" class="btn btn-primary">
@@ -1391,6 +1397,7 @@
         const processBtn = document.getElementById('processBtn');
         const btnText = document.getElementById('btnText');
         const btnSpinner = document.getElementById('btnSpinner');
+        const apiKey = document.getElementById('apiKey');
         const resultsSection = document.getElementById('resultsSection');
         const errorMessage = document.getElementById('errorMessage');
         const errorText = document.getElementById('errorText');
@@ -1611,6 +1618,11 @@
                 showError('Please upload a resume PDF first');
                 return;
             }
+            
+            if (!apiKey.value) {
+                showError('Please enter your OpenAI API key');
+                return;
+            }
 
             await processResume();
         });
@@ -1624,12 +1636,19 @@
                 setLoading(false);
                 return;
             }
+            
+            if (!apiKey.value) {
+                showError('Please enter your OpenAI API key');
+                setLoading(false);
+                return;
+            }
 
             try {
                 // Save processing data to localStorage
                 const processingData = {
                     resumeText: resumeText || '', // Empty string if no resume uploaded
-                    linkedinUrl: document.getElementById('linkedinUrl').value.trim()
+                    linkedinUrl: document.getElementById('linkedinUrl').value.trim(),
+                    apiKey: apiKey.value
                 };
                 
                 localStorage.setItem('tinyCV_processingData', JSON.stringify(processingData));
