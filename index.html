@@ -1191,7 +1191,7 @@
 
             <!-- Description Text -->
             <div class="description-text" id="jobSeekerDescription">
-                <p>If you are a job seeker and wanting to apply with a tinyCV, upload your resume and make it noise free - <span class="italic-part">Easy for recruiters to scan and cut the noise. Optionally add your LinkedIn profile for enhanced data.</span></p>
+                <p>Make powerful tinyCV to impress a company.</p>
             </div>
 
             <!-- Job Seeker Tab Content -->
@@ -1203,9 +1203,9 @@
                         <label class="form-label">Upload your resume<span class="required">*</span></label>
                         <div id="dropZone" class="upload-area">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 12l2 2 4-4"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16v-2m6 2v-2m6 2v-2M5 12l5-5 4 4 5-5m-14 7h18"></path>
                             </svg>
-                            <p class="upload-text">PDFs only | Max 5MB | Primary data source</p>
+                            <p class="upload-text">PDFs only | Max 5MB</p>
                             <input type="file" id="pdfInput" accept=".pdf" style="display: none;">
                         </div>
                         <div id="fileInfo" class="file-info hidden"></div>
@@ -1218,18 +1218,6 @@
                         <p class="form-help">Add LinkedIn for enhanced profile data (optional)</p>
                     </div>
 
-                    <!-- Job Description Link -->
-                    <div class="form-group">
-                        <label for="jobUrl" class="form-label">Link of Job Description (where you are applying)</label>
-                        <input type="url" id="jobUrl" class="form-input" placeholder="https://company.com/job-posting">
-                        <p class="form-help">Leave empty of you don't want a cover letter</p>
-                    </div>
-
-                    <!-- OpenAI API Key -->
-                    <div class="form-group">
-                        <label for="apiKey" class="form-label">OpenAI API Key (Will be removed later)</label>
-                        <input type="password" id="apiKey" class="form-input" placeholder="sk-...">
-                    </div>
 
                     <!-- Generate Button -->
                     <button id="processBtn" class="btn btn-primary">
@@ -1328,7 +1316,7 @@
 
         <!-- Footer -->
         <div class="footer">
-            Made by <a href="https://nimkarkedar.com" target="_blank">Kedar Nimkar</a> and <a href="https://www.linkedin.com/in/prateekproduct/" target="_blank">Prateek Jain</a> with ❤️ in Singapore
+            Made with love by <a href="https://nimkarkedar.com" target="_blank">Kedar Nimkar</a> (while learning AI)
         </div>
     </div>
 
@@ -1400,8 +1388,6 @@
         const dropZone = document.getElementById('dropZone');
         const pdfInput = document.getElementById('pdfInput');
         const fileInfo = document.getElementById('fileInfo');
-        const jobUrl = document.getElementById('jobUrl');
-        const apiKey = document.getElementById('apiKey');
         const processBtn = document.getElementById('processBtn');
         const btnText = document.getElementById('btnText');
         const btnSpinner = document.getElementById('btnSpinner');
@@ -1625,11 +1611,6 @@
                 showError('Please upload a resume PDF first');
                 return;
             }
-            
-            if (!apiKey.value) {
-                showError('Please enter your OpenAI API key');
-                return;
-            }
 
             await processResume();
         });
@@ -1637,15 +1618,9 @@
         async function processResume() {
             setLoading(true);
             
-            // Validate required fields - Resume is required, LinkedIn is optional
+            // Validate required fields - Resume is required, LinkedIn is optional  
             if (!resumeText) {
                 showError('Please upload a resume PDF first');
-                setLoading(false);
-                return;
-            }
-            
-            if (!apiKey.value) {
-                showError('Please enter your OpenAI API key');
                 setLoading(false);
                 return;
             }
@@ -1654,8 +1629,6 @@
                 // Save processing data to localStorage
                 const processingData = {
                     resumeText: resumeText || '', // Empty string if no resume uploaded
-                    jobUrl: jobUrl.value.trim(),
-                    apiKey: apiKey.value,
                     linkedinUrl: document.getElementById('linkedinUrl').value.trim()
                 };
                 

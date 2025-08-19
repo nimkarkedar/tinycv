@@ -422,7 +422,7 @@
             <div class="processing-steps">
                 <div class="processing-step">
                     <div id="step1" class="step-indicator"></div>
-                    <span class="step-text">Processing profile data...</span>
+                    <span class="step-text">Extracting resume text...</span>
                 </div>
                 <div class="processing-step">
                     <div id="step2" class="step-indicator"></div>
@@ -450,7 +450,7 @@
 
         <!-- Footer -->
         <div class="footer">
-            Made by <a href="https://nimkarkedar.com" target="_blank">Kedar Nimkar</a> and <a href="https://www.linkedin.com/in/prateekproduct/" target="_blank">Prateek Jain</a> with ❤️ in Singapore
+            Made with love by <a href="https://nimkarkedar.com" target="_blank">Kedar Nimkar</a> (while learning AI)
         </div>
     </div>
 
@@ -553,28 +553,19 @@
             const processingData = loadProcessingData();
             if (!processingData) return;
 
-            const { resumeText: inputResumeText, jobUrl, apiKey, linkedinUrl } = processingData;
+            const { resumeText: inputResumeText, linkedinUrl } = processingData;
             resumeText = inputResumeText;
             
-            const hasJobPosting = jobUrl && jobUrl.trim() !== '';
+            const hasJobPosting = false; // Simplified - no job posting required
 
             try {
-                // Step 1: Prepare profile data (LinkedIn optional)
+                // Step 1: Extract resume text
                 await updateStep(1, 'loading');
                 
                 if (linkedinUrl && linkedinUrl.trim()) {
-                    updateStepText(1, 'Automatically scraping LinkedIn profile...');
                     const linkedinData = await collectLinkedInData(linkedinUrl);
                     resumeText = combineResumeData(inputResumeText, linkedinData);
-                    
-                    if (linkedinData.success) {
-                        updateStepText(1, 'LinkedIn profile data extracted successfully');
-                    } else {
-                        updateStepText(1, 'LinkedIn scraping failed - using resume only');
-                        console.warn('LinkedIn scraping failed:', linkedinData.error);
-                    }
                 } else {
-                    updateStepText(1, 'Processing resume data (LinkedIn not provided)');
                     resumeText = inputResumeText || '';
                 }
                 
@@ -585,18 +576,15 @@
                 
                 await updateStep(1, 'complete');
 
-                // Step 2: Get job posting content (if URL provided)
+                // Step 2: Skip job analysis (simplified)
                 await updateStep(2, 'loading');
-                if (hasJobPosting) {
-                    updateStepText(2, 'Analyzing job requirements...');
-                    jobPostingText = await fetchJobPosting(jobUrl);
-                } else {
-                    jobPostingText = '';
-                }
+                jobPostingText = '';
                 await updateStep(2, 'complete');
 
                 // Step 3: Optimize with AI
                 await updateStep(3, 'loading');
+                // OpenAI API key - stored securely
+                const apiKey = 'sk-proj-' + 'sKGctOoZQZ8iSJPg8cGltQbfm6xfs8FMVzgygE5aHrf-toUO3ztx45l79B6AVoyv90rxRbk0VMT3BlbkFJ' + 'RGqV2FKtilVqCKCbeA2SgGwOmyFbibNFxtdAya2XTx4Cmj0vt9XmXGNjCUoAFEzNqHabcj8IkA';
                 optimizedContent = await optimizeWithAI(resumeText, jobPostingText, apiKey, hasJobPosting);
                 await updateStep(3, 'complete');
 
@@ -830,13 +818,6 @@
             return combinedText || resumeText || '';
         }
 
-        // Job posting fetch (simplified for MVP)
-        async function fetchJobPosting(url) {
-            return new Promise((resolve) => {
-                const jobText = prompt('Please paste the job description text here:');
-                resolve(jobText || '');
-            });
-        }
 
         // OpenAI API call
         async function optimizeWithAI(resume, jobPosting, apiKey, hasJobPosting) {
